@@ -1,6 +1,6 @@
-# figma-make-app
+# TO BE - Career Discovery Platform
 
-React + Vite + Tailwind CSS project running inside Figma Make.
+React + Vite + Tailwind CSS application.
 
 ## Development Server
 

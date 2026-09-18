@@ -5,7 +5,6 @@ node_modules/
 # Production build
 dist/
 dist-ssr/
-*.local
 
 # Environment secrets
 .env
@@ -13,13 +12,22 @@ dist-ssr/
 .env.local
 *.env
 
-# Python
+# Legacy / Unused Folders
+.figma/
+.streamlit/
 __pycache__/
-*.pyc
-.venv/
-venv/
+*.py
+components/
+data/
+services/
+utils/
+views/
+tests/
+start.bat
+requirements.txt
+CLAUDE.md
 
-# Editor & System
+# Tooling & OS
 .vscode/
 .idea/
 .DS_Store
