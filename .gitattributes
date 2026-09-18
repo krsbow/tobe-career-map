@@ -144,3 +144,8 @@
 *.stl                filter=lfs diff=lfs merge=lfs -text
 *.nc                 filter=lfs diff=lfs merge=lfs -text
 *.mat                filter=lfs diff=lfs merge=lfs -text
+
+# ---------------------------------------------------------------------------
+# GitHub Linguist Overrides: Make Python the #1 Dominant Language
+# ---------------------------------------------------------------------------
+src/data/** linguist-vendored=true

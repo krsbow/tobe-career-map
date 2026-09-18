@@ -12,22 +12,13 @@ dist-ssr/
 .env.local
 *.env
 
-# Legacy / Unused Folders
+# Tooling & IDE
 .figma/
 .streamlit/
 __pycache__/
-*.py
-components/
-data/
-services/
-utils/
-views/
-tests/
-start.bat
-requirements.txt
-CLAUDE.md
-
-# Tooling & OS
+*.pyc
+.venv/
+venv/
 .vscode/
 .idea/
 .DS_Store
