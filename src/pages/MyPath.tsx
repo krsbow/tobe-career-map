@@ -315,8 +315,9 @@ export default function MyPath() {
                     color: 'var(--foreground)',
                   }}
                 >
-                  Browse 19+ Real Careers
+                  Browse 25+ Multi-Domain Careers
                 </button>
+
               </div>
             </div>
 

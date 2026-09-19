@@ -13,7 +13,7 @@ export interface RoadmapMilestone {
   id: string;
   phase: string;
   title: string;
-  category: 'Foundation' | 'Skills' | 'Portfolio' | 'Career Launch';
+  category: 'Foundation' | 'Skills' | 'Projects' | 'Portfolio' | 'Career Launch';
   status: 'done' | 'active' | 'upcoming';
   estimatedWeeks: string;
   description: string;
@@ -27,6 +27,18 @@ export interface ActiveRoadmap {
   createdAt: string;
   milestones: RoadmapMilestone[];
   notes: string;
+  skillGaps?: {
+    knownSkills: string[];
+    missingSkills: string[];
+  };
+}
+
+export interface CareerMatchDetails {
+  tier: 'Strong alignment' | 'Worth exploring' | 'Possible fit';
+  reasons: string[];
+  knownSkills: string[];
+  skillsToDevelop: string[];
+  matchScore: number;
 }
 
 export interface CareerNote {
@@ -46,6 +58,10 @@ export interface AssessmentResult {
   matchedCareers: {
     careerId: string;
     matchScore: number;
+    alignmentTier?: 'Strong alignment' | 'Worth exploring' | 'Possible fit';
+    reasons?: string[];
+    knownSkills?: string[];
+    skillsToDevelop?: string[];
     breakdown: {
       interests: number;
       skills: number;
@@ -87,7 +103,9 @@ interface CareerContextType {
   deleteCareerNote: (noteId: string) => Promise<void>;
   clearRoadmap: () => Promise<void>;
   calculateCareerMatch: (career: Career) => number;
+  getCareerMatchDetails: (career: Career) => CareerMatchDetails;
 }
+
 
 const CareerContext = createContext<CareerContextType | undefined>(undefined);
 
@@ -429,6 +447,91 @@ export function CareerProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const getCareerMatchDetails = (career: Career): CareerMatchDetails => {
+    if (!assessmentResults) {
+      return {
+        tier: 'Possible fit',
+        reasons: ['Complete the career assessment to see personalized alignment insights.'],
+        knownSkills: [],
+        skillsToDevelop: career.core_skills,
+        matchScore: 50,
+      };
+    }
+
+    const matched = assessmentResults.matchedCareers?.find((m) => m.careerId === career.id);
+    const selectedSkills = assessmentResults.selectedSkills || [];
+    const riasecScores = assessmentResults.riasecScores || {};
+
+    const knownSkills = career.core_skills.filter((s) =>
+      selectedSkills.some((u) => s.toLowerCase().includes(u.toLowerCase()) || u.toLowerCase().includes(s.toLowerCase()))
+    );
+    const skillsToDevelop = career.core_skills.filter((s) => !knownSkills.includes(s));
+
+    if (matched && matched.alignmentTier) {
+      return {
+        tier: matched.alignmentTier,
+        reasons: matched.reasons || [
+          `Connects well with your natural interest profile.`,
+          knownSkills.length > 0
+            ? `Builds on your existing knowledge in ${knownSkills.slice(0, 2).join(', ')}.`
+            : 'Offers an exciting learning journey starting from core fundamentals.',
+        ],
+        knownSkills: matched.knownSkills || knownSkills,
+        skillsToDevelop: matched.skillsToDevelop || skillsToDevelop,
+        matchScore: matched.matchScore,
+      };
+    }
+
+    // Dynamic fallback calculation
+    let traitPoints = 0;
+    career.riasec_traits.forEach((t, idx) => {
+      const dimScore = riasecScores[t] || 50;
+      const weight = 1.0 - idx * 0.15;
+      traitPoints += dimScore * weight;
+    });
+    const maxPoints = career.riasec_traits.reduce((acc, _, idx) => acc + 100 * (1.0 - idx * 0.15), 0) || 100;
+    const riasecScore = (traitPoints / maxPoints) * 100;
+    const skillRatio = knownSkills.length / Math.max(1, career.core_skills.length);
+    const compositeScore = Math.round(riasecScore * 0.65 + skillRatio * 35);
+
+    let tier: 'Strong alignment' | 'Worth exploring' | 'Possible fit' = 'Possible fit';
+    if (compositeScore >= 65 || riasecScore >= 70) {
+      tier = 'Strong alignment';
+    } else if (compositeScore >= 45 || riasecScore >= 50) {
+      tier = 'Worth exploring';
+    }
+
+    const traitNames: Record<string, string> = {
+      R: 'hands-on, practical problem solving',
+      I: 'analytical inquiry and systematic research',
+      A: 'creative expression, aesthetics, and design',
+      S: 'helping, teaching, and empowering others',
+      E: 'strategic leadership and business growth',
+      C: 'methodical precision, standards, and organization',
+    };
+
+    const reasons: string[] = [];
+    if (career.riasec_traits.length > 0) {
+      const primary = career.riasec_traits[0];
+      if (traitNames[primary]) {
+        reasons.push(`Strongly connects with your interest in ${traitNames[primary]}.`);
+      }
+    }
+    if (knownSkills.length > 0) {
+      reasons.push(`Directly leverages your existing skills: ${knownSkills.slice(0, 3).join(', ')}.`);
+    } else {
+      reasons.push('A high-growth pathway where your problem-solving style provides a natural advantage.');
+    }
+
+    return {
+      tier,
+      reasons,
+      knownSkills,
+      skillsToDevelop,
+      matchScore: compositeScore,
+    };
+  };
+
   const createOrSetRoadmap = async (careerId: string) => {
     if (!user) return;
     const career = CAREERS.find((c) => c.id === careerId);
@@ -442,6 +545,10 @@ export function CareerProvider({ children }: { children: ReactNode }) {
       return;
     }
 
+    const matchDetails = getCareerMatchDetails(career);
+    const knownSkills = matchDetails.knownSkills;
+    const missingSkills = matchDetails.skillsToDevelop;
+
     const newMilestones: RoadmapMilestone[] = [
       {
         id: 'm1_' + Date.now(),
@@ -449,54 +556,132 @@ export function CareerProvider({ children }: { children: ReactNode }) {
         title: `Master ${career.title} Fundamentals`,
         category: 'Foundation',
         status: 'active',
-        estimatedWeeks: 'Weeks 1�4',
-        description: `Build a rock-solid mental model and essential skills for ${career.title}.`,
+        estimatedWeeks: 'Weeks 1–4',
+        description: `Build a rock-solid mental model and essential principles for ${career.title}.`,
         tasks: [
-          { id: 't1_1', text: `Learn core prerequisite skills: ${career.core_skills.slice(0, 3).join(', ')}`, completed: false },
-          { id: 't1_2', text: `Set up professional development tools: ${career.common_tools.slice(0, 3).join(', ')}`, completed: false },
-          { id: 't1_3', text: `Complete foundational learning path: ${career.learning_resources[0]?.title || 'Introductory Documentation'}`, completed: false },
+          {
+            id: 't1_1',
+            text: knownSkills.length > 0
+              ? `Review and solidify foundations in ${knownSkills.slice(0, 2).join(', ')}`
+              : `Learn core prerequisite skills: ${career.core_skills.slice(0, 3).join(', ')}`,
+            completed: false,
+          },
+          {
+            id: 't1_2',
+            text: `Set up industry-standard workspace & tooling: ${career.common_tools.slice(0, 3).join(', ')}`,
+            completed: false,
+          },
+          {
+            id: 't1_3',
+            text: `Complete foundational curriculum: ${career.learning_resources[0]?.title || 'Core Principles & Documentation'}`,
+            completed: false,
+          },
         ],
       },
       {
         id: 'm2_' + Date.now(),
-        phase: 'Phase 2: Applied Competence & Practical Projects',
-        title: 'Build Real-World Project Demonstrations',
+        phase: 'Phase 2: Applied Competence & Skill Development',
+        title: 'Deepen Core Capabilities & Close Skill Gaps',
         category: 'Skills',
         status: 'upcoming',
-        estimatedWeeks: 'Weeks 5�10',
-        description: `Apply theoretical knowledge by building authentic portfolio items.`,
+        estimatedWeeks: 'Weeks 5–8',
+        description: `Target high-priority skill gaps and apply domain-specific workflows.`,
         tasks: [
-          { id: 't2_1', text: `Construct Project 1: ${career.portfolio_projects[0]?.title || 'Starter Prototype'}`, completed: false },
-          { id: 't2_2', text: `Expand skillset to include: ${career.optional_skills.slice(0, 3).join(', ')}`, completed: false },
-          { id: 't2_3', text: `Build Intermediate Capstone: ${career.portfolio_projects[1]?.title || 'Full Project'}`, completed: false },
+          {
+            id: 't2_1',
+            text: missingSkills.length > 0
+              ? `Bridge priority skill gap: Master ${missingSkills.slice(0, 2).join(' & ')}`
+              : `Deep dive into advanced topics in ${career.core_skills.slice(2, 4).join(', ')}`,
+            completed: false,
+          },
+          {
+            id: 't2_2',
+            text: `Explore ecosystem tooling & techniques: ${career.optional_skills.slice(0, 3).join(', ')}`,
+            completed: false,
+          },
+          {
+            id: 't2_3',
+            text: `Complete specialized study module: ${career.learning_resources[1]?.title || 'Applied Workflows & Practical Exercises'}`,
+            completed: false,
+          },
         ],
       },
       {
         id: 'm3_' + Date.now(),
-        phase: 'Phase 3: Portfolio & Industry Credentialing',
-        title: 'Certifications and Portfolio Polish',
-        category: 'Portfolio',
+        phase: 'Phase 3: Practical Projects & Demonstrations',
+        title: 'Build Authentic Portfolio Projects',
+        category: 'Projects',
         status: 'upcoming',
-        estimatedWeeks: 'Weeks 11�16',
-        description: `Validate your expertise with recognized credentials and a publicly verifiable showcase.`,
+        estimatedWeeks: 'Weeks 9–14',
+        description: `Create verifiable, real-world case studies demonstrating practical proficiency.`,
         tasks: [
-          { id: 't3_1', text: `Earn credential: ${career.certifications[0]?.name || 'Professional Certificate'}`, completed: false },
-          { id: 't3_2', text: `Build Advanced Capstone: ${career.portfolio_projects[2]?.title || 'Production System'}`, completed: false },
-          { id: 't3_3', text: 'Document architecture, design decisions, and write a technical case study', completed: false },
+          {
+            id: 't3_1',
+            text: `Build Starter Project: ${career.portfolio_projects[0]?.title || 'Practical Functional Prototype'}`,
+            completed: false,
+          },
+          {
+            id: 't3_2',
+            text: `Construct Intermediate Project: ${career.portfolio_projects[1]?.title || 'Comprehensive Domain Case Study'}`,
+            completed: false,
+          },
+          {
+            id: 't3_3',
+            text: `Write project documentation and articulate architectural/design trade-offs`,
+            completed: false,
+          },
         ],
       },
       {
         id: 'm4_' + Date.now(),
-        phase: 'Phase 4: Career Launch & Interview Readiness',
-        title: 'Market Positioning and Job Applications',
+        phase: 'Phase 4: Credentials, Certifications & Showcase Polish',
+        title: 'Industry Credentialing and Portfolio Polish',
+        category: 'Portfolio',
+        status: 'upcoming',
+        estimatedWeeks: 'Weeks 15–18',
+        description: `Validate your competence with accredited credentials and a published portfolio.`,
+        tasks: [
+          {
+            id: 't4_1',
+            text: `Prepare for credential: ${career.certifications[0]?.name || 'Professional Certification / TVET National Certificate'}`,
+            completed: false,
+          },
+          {
+            id: 't4_2',
+            text: `Build Advanced Capstone: ${career.portfolio_projects[2]?.title || 'Production-Grade Demonstration'}`,
+            completed: false,
+          },
+          {
+            id: 't4_3',
+            text: 'Deploy live demos, publish public case studies, and organize portfolio link showcase',
+            completed: false,
+          },
+        ],
+      },
+      {
+        id: 'm5_' + Date.now(),
+        phase: 'Phase 5: Career Launch & Interview Readiness',
+        title: 'Market Positioning and Applications',
         category: 'Career Launch',
         status: 'upcoming',
-        estimatedWeeks: 'Weeks 17�20',
-        description: `Position yourself for roles with targeted salary benchmarks in the Philippines (${career.salary_data.philippines.entry_level.split('(')[0]}) or Global Remote.`,
+        estimatedWeeks: 'Weeks 19–22',
+        description: `Target benchmark salaries (${career.salary_data.philippines.entry_level.split('(')[0].trim()}) and apply to opportunities.`,
         tasks: [
-          { id: 't4_1', text: 'Polish resume and LinkedIn / GitHub / Figma portfolio links', completed: false },
-          { id: 't4_2', text: 'Conduct mock interviews covering technical and behavioral questions', completed: false },
-          { id: 't4_3', text: 'Apply to curated entry-level or junior opportunities and track outcomes', completed: false },
+          {
+            id: 't5_1',
+            text: 'Tailor professional resume, LinkedIn profile, and GitHub/Figma/portfolio links',
+            completed: false,
+          },
+          {
+            id: 't5_2',
+            text: 'Conduct mock technical & behavioral interviews focused on real case studies',
+            completed: false,
+          },
+          {
+            id: 't5_3',
+            text: 'Apply to curated entry-level / junior openings and track outreach progress',
+            completed: false,
+          },
         ],
       },
     ];
@@ -507,12 +692,17 @@ export function CareerProvider({ children }: { children: ReactNode }) {
       createdAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
       milestones: newMilestones,
       notes: '',
+      skillGaps: {
+        knownSkills,
+        missingSkills,
+      },
     };
 
     const nextRoadmaps = [newRoadmap, ...roadmaps];
     setRoadmaps(nextRoadmaps);
     setActiveRoadmapId(career.id);
     syncLocalBackup({ roadmaps: nextRoadmaps, activeRoadmapId: career.id });
+
 
     if (isSupabaseConfigured) {
       try {
@@ -738,8 +928,10 @@ export function CareerProvider({ children }: { children: ReactNode }) {
         deleteCareerNote,
         clearRoadmap,
         calculateCareerMatch,
+        getCareerMatchDetails,
       }}
     >
+
       {children}
     </CareerContext.Provider>
   );

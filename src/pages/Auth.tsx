@@ -149,7 +149,7 @@ export default function Auth() {
             <circle cx="20" cy="34" r="6.5" fill="#7A9E8E" fillOpacity="0.6" />
             <circle cx="44" cy="34" r="9.5" stroke="#FFFFFF" strokeWidth="3" fill="none" />
             <circle cx="44" cy="34" r="6.5" fill="#7A9E8E" fillOpacity="0.6" />
-            <path d="M 29.5 33 C 33 28, 37 28, 40.5 33" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" fill="none" />
+            <path d="M 29.5 33 C 30.7 30.5, 33.3 30.5, 34.5 33" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" fill="none" />
             <path d="M 10.5 33 L 4 30" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" fill="none" />
             <path d="M 53.5 33 L 60 30" stroke="#FFFFFF" strokeWidth="3" strokeLinecap="round" fill="none" />
           </svg>
@@ -179,10 +179,10 @@ export default function Auth() {
 
           <div style={{ marginTop: 44, display: 'flex', flexDirection: 'column', gap: 14 }}>
             {[
-              'Personalized RIASEC discovery',
+              'Personalized interest & strength discovery',
               'Real Philippine & Global salary benchmarks',
               'TOBE — your private AI career mentor',
-              'Isolated milestone roadmaps & notes',
+              'Personalized milestone roadmaps & notes',
             ].map((feature) => (
               <div key={feature} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div

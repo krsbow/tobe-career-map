@@ -14,7 +14,8 @@ export default function Explore() {
     isCareerSaved,
     recordView,
     createOrSetRoadmap,
-    calculateCareerMatch,
+    getCareerMatchDetails,
+    assessmentResults,
   } = useCareer();
 
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -29,6 +30,8 @@ export default function Explore() {
       c.title.toLowerCase().includes(search.toLowerCase()) ||
       c.category_name.toLowerCase().includes(search.toLowerCase()) ||
       c.description.toLowerCase().includes(search.toLowerCase()) ||
+      (c.psoc_code && c.psoc_code.includes(search)) ||
+      (c.soc_code && c.soc_code.toLowerCase().includes(search.toLowerCase())) ||
       c.core_skills.some((s) => s.toLowerCase().includes(search.toLowerCase())) ||
       c.common_tools.some((t) => t.toLowerCase().includes(search.toLowerCase()));
     return matchesCategory && matchesSearch;
@@ -65,15 +68,15 @@ export default function Explore() {
       <div ref={containerRef} style={{ maxWidth: 1240, margin: '0 auto', padding: '56px 32px 80px' }}>
         {/* Header */}
         <div style={{ marginBottom: 40 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-foreground)', marginBottom: 8 }}>
-            Explore Knowledge Base
+          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-foreground)', marginBottom: 6 }}>
+            Multi-Domain Knowledge Base
           </p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 400, letterSpacing: '-0.025em', color: 'var(--foreground)', marginBottom: 24 }}>
-            Every path worth considering.
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 400, letterSpacing: '-0.025em', color: 'var(--foreground)', marginBottom: 20 }}>
+            Every pathway grounded in real data.
           </h1>
 
           {/* Search bar */}
-          <div style={{ position: 'relative', maxWidth: 480 }}>
+          <div style={{ position: 'relative', maxWidth: 520 }}>
             <svg
               width="16"
               height="16"
@@ -93,68 +96,63 @@ export default function Explore() {
             </svg>
             <input
               type="text"
-              placeholder="Search careers, skills (e.g. React, SQL, Figma, AWS)..."
+              placeholder="Search careers, skills, tools, or industries..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               style={{
                 width: '100%',
-                padding: '12px 14px 12px 40px',
-                border: '1px solid var(--border)',
+                padding: '12px 16px 12px 40px',
                 borderRadius: 'var(--radius)',
-                fontSize: 15,
+                border: '1px solid var(--border)',
+                fontSize: 14,
                 fontFamily: 'var(--font-body)',
                 background: 'var(--card)',
                 color: 'var(--foreground)',
-                outline: 'none',
-                boxSizing: 'border-box',
-                transition: 'border-color 0.2s ease',
               }}
-              onFocus={(e) => { e.target.style.borderColor = 'var(--navy)'; }}
-              onBlur={(e) => { e.target.style.borderColor = 'var(--border)'; }}
             />
           </div>
         </div>
 
-        {/* Filter categories */}
-        <div style={{ display: 'flex', gap: 8, marginBottom: 36, flexWrap: 'wrap' }}>
-          <button
-            onClick={() => setSelectedCategory('all')}
-            style={{
-              padding: '7px 16px',
-              borderRadius: 20,
-              fontSize: 13,
-              fontWeight: 500,
-              fontFamily: 'var(--font-body)',
-              cursor: 'pointer',
-              border: selectedCategory === 'all' ? '1px solid var(--navy)' : '1px solid var(--border)',
-              background: selectedCategory === 'all' ? 'var(--navy)' : 'var(--card)',
-              color: selectedCategory === 'all' ? 'white' : 'var(--foreground)',
-              transition: 'all 0.15s ease',
-            }}
-          >
-            All Fields ({careers.length})
-          </button>
+        {/* Categories scrollable pill filter */}
+        <div
+          style={{
+            display: 'flex',
+            gap: 8,
+            overflowX: 'auto',
+            paddingBottom: 16,
+            marginBottom: 32,
+          }}
+        >
           {CAREER_CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat.id;
-            const count = careers.filter((c) => c.category_id === cat.id).length;
+            const count = cat.id === 'all'
+              ? careers.length
+              : careers.filter((c) => c.category_id === cat.id).length;
+
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 style={{
-                  padding: '7px 16px',
+                  padding: '8px 16px',
                   borderRadius: 20,
                   fontSize: 13,
-                  fontWeight: 500,
+                  fontWeight: 600,
                   fontFamily: 'var(--font-body)',
+                  whiteSpace: 'nowrap',
                   cursor: 'pointer',
                   border: isSelected ? '1px solid var(--navy)' : '1px solid var(--border)',
                   background: isSelected ? 'var(--navy)' : 'var(--card)',
                   color: isSelected ? 'white' : 'var(--foreground)',
                   transition: 'all 0.15s ease',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 6,
                 }}
               >
-                {cat.name} ({count})
+                <span>{cat.icon}</span>
+                <span>{cat.name}</span>
+                <span style={{ fontSize: 11, opacity: 0.75 }}>({count})</span>
               </button>
             );
           })}
@@ -170,7 +168,7 @@ export default function Explore() {
         >
           {filteredCareers.map((career) => {
             const isSaved = isCareerSaved(career.id);
-            const matchScore = calculateCareerMatch(career);
+            const matchDetails = assessmentResults ? getCareerMatchDetails(career) : null;
 
             return (
               <div
@@ -198,21 +196,23 @@ export default function Explore() {
                 }}
               >
                 <div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
-                    <span
-                      style={{
-                        fontSize: 11,
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.06em',
-                        color: 'var(--sage)',
-                        background: 'rgba(122,158,142,0.12)',
-                        padding: '3px 8px',
-                        borderRadius: 4,
-                      }}
-                    >
-                      {career.category_name}
-                    </span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 10 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.06em',
+                          color: 'var(--navy)',
+                          background: 'var(--secondary)',
+                          padding: '3px 8px',
+                          borderRadius: 4,
+                        }}
+                      >
+                        {career.category_name}
+                      </span>
+                    </div>
 
                     <button
                       onClick={(e) => {
@@ -243,12 +243,35 @@ export default function Explore() {
                       fontSize: 22,
                       fontWeight: 500,
                       color: 'var(--foreground)',
-                      margin: '0 0 8px',
+                      margin: '0 0 6px',
                       letterSpacing: '-0.02em',
+                      cursor: 'pointer',
+                    }}
+                    onClick={() => {
+                      recordView(career.id);
+                      navigate(`/career/${career.id}`);
                     }}
                   >
                     {career.title}
                   </h3>
+
+                  {matchDetails && (
+                    <div style={{ marginBottom: 10 }}>
+                      <span
+                        style={{
+                          fontSize: 11,
+                          fontWeight: 700,
+                          padding: '2px 8px',
+                          borderRadius: 10,
+                          background: matchDetails.tier === 'Strong alignment' ? '#ECFDF5' : matchDetails.tier === 'Worth exploring' ? '#EFF6FF' : '#F8FAFC',
+                          color: matchDetails.tier === 'Strong alignment' ? '#065F46' : matchDetails.tier === 'Worth exploring' ? '#1E40AF' : '#475569',
+                          border: `1px solid ${matchDetails.tier === 'Strong alignment' ? '#A7F3D0' : matchDetails.tier === 'Worth exploring' ? '#BFDBFE' : '#E2E8F0'}`,
+                        }}
+                      >
+                        ● {matchDetails.tier}
+                      </span>
+                    </div>
+                  )}
 
                   <p
                     style={{
@@ -291,7 +314,7 @@ export default function Explore() {
                 </div>
 
                 <div>
-                  {/* Salary info */}
+                  {/* Salary info & work style */}
                   <div
                     style={{
                       paddingTop: 14,
@@ -310,19 +333,22 @@ export default function Explore() {
                         {career.salary_data.philippines.entry_level.split('(')[0]}
                       </div>
                     </div>
-                    {matchScore > 0 && (
-                      <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontSize: 16, fontWeight: 700, fontFamily: 'var(--font-display)', color: 'var(--navy)' }}>
-                          {matchScore}%
-                        </div>
-                        <div style={{ fontSize: 10, color: 'var(--muted-foreground)' }}>match</div>
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: 11, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                        Work Style
                       </div>
-                    )}
+                      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--navy)' }}>
+                        {career.work_style}
+                      </div>
+                    </div>
                   </div>
 
                   <div style={{ display: 'flex', gap: 8 }}>
                     <button
-                      onClick={() => handleOpenDetail(career)}
+                      onClick={() => {
+                        recordView(career.id);
+                        navigate(`/career/${career.id}`);
+                      }}
                       style={{
                         flex: 1,
                         background: 'transparent',
@@ -337,16 +363,8 @@ export default function Explore() {
                         textAlign: 'center',
                         transition: 'all 0.15s ease',
                       }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--navy)';
-                        e.currentTarget.style.background = '#FAF9F6';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.borderColor = 'var(--border)';
-                        e.currentTarget.style.background = 'transparent';
-                      }}
                     >
-                      View Deep Dive
+                      Explore Details
                     </button>
                     <button
                       onClick={() => {
@@ -381,7 +399,7 @@ export default function Explore() {
               No careers found matching "{search}".
             </p>
             <p style={{ fontSize: 14, color: 'var(--muted-foreground)', marginBottom: 20 }}>
-              Try searching by skills like "Python", "React", "SQL", or clearing the category filter.
+              Try searching by skills (e.g. "Python", "Nursing", "AutoCAD", "Figma", "Tax") or resetting filters.
             </p>
             <button
               onClick={() => {
@@ -397,7 +415,6 @@ export default function Explore() {
                 fontSize: 13,
                 fontWeight: 600,
                 cursor: 'pointer',
-                fontFamily: 'var(--font-body)',
               }}
             >
               Reset Filters
@@ -405,7 +422,7 @@ export default function Explore() {
           </div>
         )}
 
-        {/* Deep Dive Modal mounted via createPortal for glitch-free viewport overlay */}
+        {/* Deep Dive Modal */}
         {selectedCareer &&
           createPortal(
             <div
@@ -430,7 +447,7 @@ export default function Explore() {
                 style={{
                   background: 'var(--background)',
                   borderRadius: 'calc(var(--radius) * 2)',
-                  maxWidth: 820,
+                  maxWidth: 840,
                   width: '100%',
                   maxHeight: '88vh',
                   overflowY: 'auto',
@@ -441,7 +458,6 @@ export default function Explore() {
                 }}
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Close Button */}
                 <button
                   onClick={() => setSelectedCareer(null)}
                   style={{
@@ -461,17 +477,22 @@ export default function Explore() {
                 </button>
 
                 <div style={{ marginBottom: 24 }}>
-                  <span
-                    style={{
-                      fontSize: 12,
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      color: 'var(--sage)',
-                    }}
-                  >
-                    {selectedCareer.category_name} · Deep Dive
-                  </span>
+                  <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap', marginBottom: 6 }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--navy)', background: 'var(--secondary)', padding: '3px 8px', borderRadius: 4 }}>
+                      {selectedCareer.category_name}
+                    </span>
+                    {selectedCareer.psoc_code && (
+                      <span style={{ fontSize: 11, color: 'var(--muted-foreground)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: 4 }}>
+                        PSA PSOC: {selectedCareer.psoc_code}
+                      </span>
+                    )}
+                    {selectedCareer.soc_code && (
+                      <span style={{ fontSize: 11, color: 'var(--muted-foreground)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: 4 }}>
+                        O*NET: {selectedCareer.soc_code} (Job Zone {selectedCareer.job_zone || 4})
+                      </span>
+                    )}
+                  </div>
+
                   <h2
                     style={{
                       fontFamily: 'var(--font-display)',
@@ -488,10 +509,10 @@ export default function Explore() {
                   </p>
                 </div>
 
-                {/* Salary benchmarks table */}
+                {/* Salary Benchmarks */}
                 <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '20px', marginBottom: 24 }}>
                   <h4 style={{ fontSize: 14, fontWeight: 700, color: 'var(--navy)', marginBottom: 12, letterSpacing: '0.02em' }}>
-                    Authentic Compensation Benchmarks
+                    Authentic Salary Benchmarks & Methodology
                   </h4>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }} className="salary-grid">
                     <div>
@@ -502,7 +523,7 @@ export default function Explore() {
                       <div style={{ fontSize: 11, color: 'var(--muted-foreground)', marginTop: 4 }}>Source: {selectedCareer.salary_data.philippines.source}</div>
                     </div>
                     <div>
-                      <div style={{ fontSize: 12, color: 'var(--muted-foreground)', fontWeight: 600 }}>Global Remote (USD)</div>
+                      <div style={{ fontSize: 12, color: 'var(--muted-foreground)', fontWeight: 600 }}>Global Benchmark (USD)</div>
                       <div style={{ fontSize: 13, marginTop: 4 }}><strong>Entry:</strong> {selectedCareer.salary_data.global_usd.entry_level}</div>
                       <div style={{ fontSize: 13, marginTop: 2 }}><strong>Mid:</strong> {selectedCareer.salary_data.global_usd.mid_level}</div>
                       <div style={{ fontSize: 13, marginTop: 2 }}><strong>Senior:</strong> {selectedCareer.salary_data.global_usd.senior_level}</div>
@@ -514,7 +535,7 @@ export default function Explore() {
                 {/* Key Responsibilities */}
                 <div style={{ marginBottom: 24 }}>
                   <h4 style={{ fontSize: 15, fontWeight: 700, color: 'var(--foreground)', marginBottom: 10 }}>
-                    Key Responsibilities
+                    Core Occupational Responsibilities
                   </h4>
                   <ul style={{ paddingLeft: 20, margin: 0, fontSize: 14, color: 'var(--foreground)', lineHeight: 1.7 }}>
                     {selectedCareer.responsibilities.map((r, i) => (
@@ -536,7 +557,7 @@ export default function Explore() {
                     </div>
                   </div>
                   <div>
-                    <h4 style={{ fontSize: 14, fontWeight: 700, color: 'var(--foreground)', marginBottom: 8 }}>Industry Tools</h4>
+                    <h4 style={{ fontSize: 14, fontWeight: 700, color: 'var(--foreground)', marginBottom: 8 }}>Industry Tools & Environments</h4>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                       {selectedCareer.common_tools.map((t) => (
                         <span key={t} style={{ fontSize: 12, padding: '4px 10px', background: '#EAE8E3', color: 'var(--foreground)', borderRadius: 4, fontWeight: 500 }}>
@@ -547,10 +568,10 @@ export default function Explore() {
                   </div>
                 </div>
 
-                {/* Real Certifications & Direct Links */}
+                {/* Real Certifications & Qualifications */}
                 <div style={{ marginBottom: 24 }}>
                   <h4 style={{ fontSize: 15, fontWeight: 700, color: 'var(--foreground)', marginBottom: 10 }}>
-                    Recommended Industry Certifications
+                    Verified Certifications & Credentials
                   </h4>
                   <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
                     {selectedCareer.certifications.map((cert) => (
@@ -583,6 +604,30 @@ export default function Explore() {
                   </div>
                 </div>
 
+                {/* Portfolio Projects */}
+                {selectedCareer.portfolio_projects && selectedCareer.portfolio_projects.length > 0 && (
+                  <div style={{ marginBottom: 24 }}>
+                    <h4 style={{ fontSize: 15, fontWeight: 700, color: 'var(--foreground)', marginBottom: 10 }}>
+                      Portfolio Projects & Demonstrations
+                    </h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                      {selectedCareer.portfolio_projects.map((p, idx) => (
+                        <div key={idx} style={{ background: '#FAF9F6', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '12px 16px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
+                            <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--navy)' }}>{p.title}</span>
+                            <span style={{ fontSize: 11, color: 'var(--muted-foreground)', background: 'var(--secondary)', padding: '2px 6px', borderRadius: 4 }}>
+                              {p.difficulty}
+                            </span>
+                          </div>
+                          <p style={{ fontSize: 13, color: 'var(--muted-foreground)', margin: 0, lineHeight: 1.5 }}>
+                            {p.description}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Action buttons */}
                 <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 32, borderTop: '1px solid var(--border)', paddingTop: 20 }}>
                   <button
@@ -595,7 +640,6 @@ export default function Explore() {
                       fontSize: 14,
                       fontWeight: 500,
                       cursor: 'pointer',
-                      fontFamily: 'var(--font-body)',
                     }}
                   >
                     Close
@@ -615,10 +659,9 @@ export default function Explore() {
                       fontSize: 14,
                       fontWeight: 600,
                       cursor: 'pointer',
-                      fontFamily: 'var(--font-body)',
                     }}
                   >
-                    Chart Pathway for this Career →
+                    Chart 5-Phase Pathway →
                   </button>
                 </div>
               </div>

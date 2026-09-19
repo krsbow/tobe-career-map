@@ -7,8 +7,10 @@ import AuthCallback from './pages/AuthCallback';
 import Home from './pages/Home';
 import Discover from './pages/Discover';
 import Explore from './pages/Explore';
+import CareerDetail from './pages/CareerDetail';
 import MyPath from './pages/MyPath';
 import TOBE from './pages/TOBE';
+import Profile from './pages/Profile';
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, loading } = useAuth();
@@ -45,8 +47,11 @@ function AppRoutes() {
       <Route path="/home" element={<PrivateRoute><Home /></PrivateRoute>} />
       <Route path="/discover" element={<PrivateRoute><Discover /></PrivateRoute>} />
       <Route path="/explore" element={<PrivateRoute><Explore /></PrivateRoute>} />
+      <Route path="/explore/:careerId" element={<PrivateRoute><CareerDetail /></PrivateRoute>} />
+      <Route path="/career/:careerId" element={<PrivateRoute><CareerDetail /></PrivateRoute>} />
       <Route path="/my-path" element={<PrivateRoute><MyPath /></PrivateRoute>} />
       <Route path="/tobe" element={<PrivateRoute><TOBE /></PrivateRoute>} />
+      <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

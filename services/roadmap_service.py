@@ -6,16 +6,21 @@ Generates structured 5-phase career pathways, calculates live completion metrics
 from typing import Dict, Any, List, Optional
 from services.database import db_service
 from services.career_service import career_service
+from services.training_service import TrainingService
+from services.learning_service import LearningService
 
 class RoadmapService:
     def __init__(self):
         self.db = db_service
         self.career_srv = career_service
+        self.training_srv = TrainingService()
+        self.learning_srv = LearningService()
 
     def generate_personalized_roadmap(self, career_id: str, user_profile: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """
         Synthesize a 5-phase actionable career roadmap tailored to the career and user background.
-        Adapts recommendations if the user already has certain skills.
+        Calculates skill gaps: CareerRequirements - UserSkills = Gaps.
+        Enriches phases with TVET/TESDA regulations and curated open educational courses.
         """
         career = self.career_srv.get_career_details(career_id)
         if not career:
@@ -26,6 +31,24 @@ class RoadmapService:
         certifications = career.get("certifications", [])
         projects = career.get("portfolio_projects", [])
         resources = career.get("learning_resources", [])
+        psoc_code = career.get("psoc_code")
+
+        # 1. Skill Gap Analysis
+        known_skills = []
+        missing_skills = []
+        for s in core_skills:
+            if any(k in s.lower() or s.lower() in k for k in current_skills):
+                known_skills.append(s)
+            else:
+                missing_skills.append(s)
+
+        # 2. TVET and Learning Resource Enriched Lookup
+        training_regs = self.training_srv.get_qualifications_for_career(career_id)
+        learning_recs = self.learning_srv.get_learning_resources_for_career(career_id)
+        combined_resources = resources + [
+            {"title": r["title"], "type": r["type"], "cost": r["cost"], "provider": r["provider"], "url": r["url"]}
+            for r in learning_recs if r.get("url") not in [res.get("url") for res in resources]
+        ]
 
         # Phase 1: Foundations
         phase1_items = []
@@ -35,13 +58,16 @@ class RoadmapService:
             desc = f"Master the fundamental mental models, syntax, and principles of {skill}."
             if is_known:
                 desc += " (You noted familiarity with this—use this phase to consolidate and verify key concepts)."
+            else:
+                desc += " (Identified Skill Gap: Prioritize establishing core fundamentals here)."
             
             phase1_items.append({
                 "title": f"Master {skill} Fundamentals",
                 "description": desc,
                 "type": "skill",
+                "is_gap": not is_known,
                 "estimated_effort": "2–3 weeks",
-                "resources": resources[:2]
+                "resources": combined_resources[:2]
             })
 
         # Phase 2: Core Skills & Ecosystem

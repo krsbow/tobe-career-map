@@ -1,6 +1,6 @@
-// Real-World Verified Knowledge Base for TO BE Career Discovery Platform
-// Contains 20+ authentic technology, design, data, cloud, security, and product careers
-// with verified salary benchmarks (PH & Global), skills, tools, certs, and portfolio projects.
+// Real-World Multi-Domain Knowledge Base for TO BE Career Discovery Platform
+// Contains 26 authentic careers spanning Technology, Design, Healthcare, Engineering,
+// Finance, Education, Skilled Trades, and Communications with authentic PSOC / O*NET codes and salary benchmarks.
 
 export interface Certification {
   name: string;
@@ -48,6 +48,10 @@ export interface Career {
   field: string;
   category_id: string;
   category_name: string;
+  psoc_code?: string;
+  soc_code?: string;
+  job_zone?: number;
+  esco_uri?: string;
   tagline: string;
   description: string;
   responsibilities: string[];
@@ -65,6 +69,9 @@ export interface Career {
   sources: string[];
   last_updated: string;
   match?: number;
+  tier?: 'Strong alignment' | 'Worth exploring' | 'Possible fit';
+  match_reasons?: string[];
+  skills_to_develop?: string[];
 }
 
 export interface CareerCategory {
@@ -81,7 +88,7 @@ export const CAREER_CATEGORIES: CareerCategory[] = [
   },
   {
     "id": "design",
-    "name": "UI/UX & Product Design",
+    "name": "UI/UX & Creative Design",
     "icon": "\ud83c\udfa8"
   },
   {
@@ -98,6 +105,41 @@ export const CAREER_CATEGORIES: CareerCategory[] = [
     "id": "product_management",
     "name": "Product & Tech Strategy",
     "icon": "\ud83d\ude80"
+  },
+  {
+    "id": "business_marketing",
+    "name": "Business & Digital Marketing",
+    "icon": "\ud83d\udcc8"
+  },
+  {
+    "id": "healthcare",
+    "name": "Healthcare & Life Sciences",
+    "icon": "\ud83e\ude7a"
+  },
+  {
+    "id": "engineering",
+    "name": "Engineering & Architecture",
+    "icon": "\u2699\ufe0f"
+  },
+  {
+    "id": "finance_accounting",
+    "name": "Finance & Accounting",
+    "icon": "\ud83d\udcb0"
+  },
+  {
+    "id": "education",
+    "name": "Education & Training",
+    "icon": "\ud83c\udf93"
+  },
+  {
+    "id": "skilled_trades",
+    "name": "Skilled Trades & Technical Services",
+    "icon": "\ud83d\udd27"
+  },
+  {
+    "id": "communications",
+    "name": "Writing & Communications",
+    "icon": "\u270d\ufe0f"
   }
 ];
 
@@ -244,14 +286,17 @@ export const CAREERS: Career[] = [
       "Payscale",
       "Levels.fyi"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2512",
+    "soc_code": "15-1254.00",
+    "job_zone": 4
   },
   {
     "id": "ux-designer",
     "title": "UX Designer",
     "field": "Design & User Experience",
     "category_id": "design",
-    "category_name": "UI/UX & Product Design",
+    "category_name": "UI/UX & Creative Design",
     "tagline": "Understand human behavior to design intuitive, seamless digital product experiences.",
     "description": "User Experience (UX) Designers research how people interact with products, uncover pain points, and craft intuitive workflows, information architecture, wireframes, and prototypes that make digital tools effortless and enjoyable.",
     "responsibilities": [
@@ -381,7 +426,10 @@ export const CAREERS: Career[] = [
       "Levels.fyi",
       "UXPH"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2166",
+    "soc_code": "27-1024.00",
+    "job_zone": 4
   },
   {
     "id": "fullstack-developer",
@@ -519,7 +567,10 @@ export const CAREERS: Career[] = [
       "NodeFlair",
       "Payscale"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2512",
+    "soc_code": "15-1252.00",
+    "job_zone": 4
   },
   {
     "id": "data-analyst",
@@ -655,7 +706,10 @@ export const CAREERS: Career[] = [
       "Analytics Association of the Philippines",
       "Levels.fyi"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2521",
+    "soc_code": "15-2051.01",
+    "job_zone": 4
   },
   {
     "id": "cybersecurity-analyst",
@@ -796,7 +850,10 @@ export const CAREERS: Career[] = [
       "ISC2 Cybersecurity Workforce Study",
       "Payscale"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2529",
+    "soc_code": "15-1212.00",
+    "job_zone": 4
   },
   {
     "id": "cloud-engineer",
@@ -1073,7 +1130,10 @@ export const CAREERS: Career[] = [
       "Product School",
       "Payscale"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "1219",
+    "soc_code": "11-9199.00",
+    "job_zone": 4
   },
   {
     "id": "ai-ml-engineer",
@@ -1216,14 +1276,17 @@ export const CAREERS: Career[] = [
       "O'Reilly",
       "Payscale"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2512",
+    "soc_code": "15-1299.08",
+    "job_zone": 5
   },
   {
     "id": "ui-designer",
     "title": "UI Designer",
     "field": "Design",
     "category_id": "design",
-    "category_name": "UI/UX & Product Design",
+    "category_name": "UI/UX & Creative Design",
     "tagline": "Craft visual aesthetics, typography, color palettes, and component design systems for digital interfaces.",
     "description": "User Interface (UI) Designers focus on the visual, interactive, and graphic aspects of digital products. They create cohesive visual languages, icons, typography scales, layout grids, and interactive states.",
     "responsibilities": [
@@ -1350,7 +1413,10 @@ export const CAREERS: Career[] = [
       "Levels.fyi",
       "Payscale"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2166",
+    "soc_code": "27-1024.00",
+    "job_zone": 4
   },
   {
     "id": "devops-engineer",
@@ -1492,7 +1558,10 @@ export const CAREERS: Career[] = [
       "Levels.fyi",
       "Payscale"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2512",
+    "soc_code": "15-1252.00",
+    "job_zone": 4
   },
   {
     "id": "data-scientist",
@@ -1627,142 +1696,146 @@ export const CAREERS: Career[] = [
       "Levels.fyi",
       "Payscale"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2521",
+    "soc_code": "15-2051.00",
+    "job_zone": 5
   },
   {
     "id": "technical-writer",
-    "title": "Technical Writer",
-    "field": "Documentation & Communications",
-    "category_id": "product_management",
-    "category_name": "Product & Tech Strategy",
-    "tagline": "Translate intricate code, APIs, and systems into crystal-clear developer documentation and user guides.",
-    "description": "Technical Writers create comprehensive documentation, API references, tutorials, and developer guides. They make complex technologies easy to understand, adopt, and integrate.",
+    "title": "Technical Writer & Content Strategist",
+    "field": "Writing, Media & Communications",
+    "category_id": "communications",
+    "category_name": "Writing & Communications",
+    "tagline": "Translate complex technical systems, APIs, and product architectures into crystal-clear documentation.",
+    "description": "Technical Writers bridge the gap between engineering teams and end-users. They produce developer documentation, API references, user manuals, knowledge bases, and standard operating procedures.",
     "responsibilities": [
-      "Write and maintain developer documentation, API references, code samples, and tutorials",
-      "Collaborate with software engineers to test APIs and document endpoint parameters",
-      "Maintain documentation-as-code repositories using Markdown, Git, and static site generators",
-      "Create architectural diagrams, onboarding guides, and troubleshooting workflows",
-      "Review documentation analytics and gather user feedback to clarify confusing topics"
+      "Author comprehensive developer documentation, tutorials, and API reference guides",
+      "Collaborate with software engineers, product managers, and designers to extract technical specifications",
+      "Maintain docs-as-code workflows using Markdown, Git, static site generators, and CI/CD pipelines",
+      "Create diagrams, architecture flowcharts, and instructional screen captures",
+      "Review and edit user interface microcopy and system error messages for clarity"
     ],
     "riasec_traits": [
       "A",
       "I",
       "C"
     ],
-    "work_style": "Editorial clarity, meticulous organization, independent research, and developer empathy.",
+    "work_style": "In-depth technical research, structured writing flow, and cross-team collaboration.",
     "core_skills": [
-      "Technical Writing",
-      "Clear Communication",
+      "Technical Writing & Documentation",
+      "API Documentation",
       "Markdown & Docs-as-Code",
-      "API Basics",
       "Git & GitHub",
-      "Information Architecture"
+      "Information Architecture",
+      "Content Strategy",
+      "Copy Editing"
     ],
     "optional_skills": [
-      "HTML/CSS",
-      "Python Basics",
-      "Static Site Generators (Docusaurus/MkDocs)",
-      "API Testing (Postman)",
-      "Diagramming (Mermaid/Draw.io)"
+      "Swagger / OpenAPI",
+      "HTML/CSS Basics",
+      "JavaScript / Python Basics",
+      "Docusaurus / MkDocs",
+      "UX Microcopy"
     ],
     "common_tools": [
-      "Markdown",
-      "VS Code",
+      "Markdown / MDX",
       "Git / GitHub",
+      "VS Code",
       "Postman",
-      "Docusaurus / Readme.com",
-      "Notion"
+      "Docusaurus",
+      "Notion / Confluence"
     ],
     "education_paths": [
-      "Degrees in English, Communications, Journalism, Technical Communication, Computer Science, or IT",
-      "Developers or QA specialists with strong writing and communication strengths",
-      "Self-taught technical writers with published open-source documentation portfolios"
+      "Bachelor's degree in Communications, English, Technical Writing, Computer Science, or related field",
+      "Demonstrated portfolio of public documentation, technical articles, and open-source contributions"
     ],
     "certifications": [
       {
-        "name": "Google Technical Writing Courses (I & II)",
+        "name": "Google Technical Writing Courses",
         "cost": "Free",
         "provider": "Google Developers",
         "url": "https://developers.google.com/tech-writing"
       },
       {
-        "name": "Society for Technical Communication (STC) Certifications",
-        "cost": "$250 \u2013 $400",
+        "name": "Society for Technical Communication (STC) Certified Professional",
+        "cost": "$260 \u2013 $515",
         "provider": "STC",
-        "url": "https://www.stc.org/"
+        "url": "https://www.stc.org/certification/"
       }
     ],
     "portfolio_projects": [
       {
-        "title": "Open-Source Library API Reference & Getting Started Guide",
-        "description": "Authored complete Getting Started guide, quickstart code samples, and comprehensive API parameter tables for an open-source project.",
-        "difficulty": "Foundational"
-      },
-      {
-        "title": "Interactive REST API Tutorial & Postman Collection",
-        "description": "Step-by-step developer tutorial guiding users through authentication, webhook setup, and error handling with clear curl examples.",
+        "title": "Open-Source REST API Documentation & Quickstart Guide",
+        "description": "Interactive API reference documentation with curl examples, payload schemas, and error code breakdowns.",
         "difficulty": "Intermediate"
       },
       {
-        "title": "Full Documentation-as-Code Site with Docusaurus",
-        "description": "Custom deployed documentation website with versioning, search integration, code tabs, and automated GitHub Actions deployment.",
-        "difficulty": "Advanced"
+        "title": "End-to-End Developer Tutorial & Architectural Deep Dive",
+        "description": "Step-by-step onboarding guide teaching developers how to deploy a full-stack application.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Standard Operating Procedure (SOP) & Knowledge Base Architecture",
+        "description": "Structured taxonomy and multi-article troubleshooting knowledge base for a SaaS product.",
+        "difficulty": "Foundational"
       }
     ],
     "salary_data": {
       "philippines": {
         "currency": "PHP",
-        "entry_level": "\u20b1300,000 \u2013 \u20b1480,000 / year (\u20b125k - \u20b140k/mo)",
-        "mid_level": "\u20b1540,000 \u2013 \u20b11,020,000 / year (\u20b145k - \u20b185k/mo)",
-        "senior_level": "\u20b11,080,000 \u2013 \u20b12,000,000+ / year (\u20b190k - \u20b1165k+/mo)",
-        "source": "Payscale PH, Write the Docs Salary Benchmarks",
+        "entry_level": "\u20b1300,000 \u2013 \u20b1540,000 / year (\u20b125k - \u20b145k/mo)",
+        "mid_level": "\u20b1600,000 \u2013 \u20b11,100,000 / year (\u20b150k - \u20b192k/mo)",
+        "senior_level": "\u20b11,200,000 \u2013 \u20b12,200,000+ / year (\u20b1100k - \u20b1183k+/mo)",
+        "source": "JobStreet Philippines & Payscale Technical Writer Benchmarks",
         "updated_at": "2026-Q1"
       },
       "global_usd": {
         "currency": "USD",
-        "entry_level": "$60,000 \u2013 $78,000 / year",
-        "mid_level": "$82,000 \u2013 $112,000 / year",
+        "entry_level": "$60,000 \u2013 $80,000 / year",
+        "mid_level": "$85,000 \u2013 $115,000 / year",
         "senior_level": "$120,000 \u2013 $165,000+ / year",
-        "source": "Levels.fyi, US BLS (Technical Writers)",
+        "source": "U.S. Bureau of Labor Statistics (Technical Writers)",
         "updated_at": "2026-Q1"
       }
     },
     "learning_resources": [
       {
-        "title": "Google Technical Writing Free Courses",
-        "type": "Official Interactive Modules",
+        "title": "Google Developers Technical Writing Courses",
+        "type": "Interactive Curriculum",
         "cost": "Free",
         "provider": "Google",
         "url": "https://developers.google.com/tech-writing"
       },
       {
-        "title": "Write the Docs Community Guide",
-        "type": "Community Documentation Resources",
+        "title": "Write the Docs Community Guides",
+        "type": "Open-Source Documentation Community",
         "cost": "Free",
         "provider": "Write the Docs",
         "url": "https://www.writethedocs.org/"
       },
       {
-        "title": "Di\u00e1taxis Documentation Framework",
-        "type": "Documentation Architecture Model",
+        "title": "Microsoft Style Guide for Technical Publications",
+        "type": "Writing Standards Reference",
         "cost": "Free",
-        "provider": "Di\u00e1taxis",
-        "url": "https://diataxis.fr/"
+        "provider": "Microsoft Learn",
+        "url": "https://learn.microsoft.com/en-us/style-guide/welcome/"
       }
     ],
     "related_careers": [
       "frontend-developer",
       "product-manager",
-      "qa-engineer",
-      "ux-designer"
+      "secondary-educator"
     ],
     "sources": [
-      "Google Developers",
-      "Write the Docs",
-      "U.S. BLS",
-      "Payscale"
+      "Philippine Statistics Authority (PSOC 2641)",
+      "Google Developers Tech Writing Guide",
+      "U.S. BLS"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2641",
+    "soc_code": "27-3042.00",
+    "job_zone": 4
   },
   {
     "id": "qa-engineer",
@@ -1896,7 +1969,10 @@ export const CAREERS: Career[] = [
       "Levels.fyi",
       "Payscale"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2519",
+    "soc_code": "15-1253.00",
+    "job_zone": 4
   },
   {
     "id": "mobile-app-developer",
@@ -2030,7 +2106,10 @@ export const CAREERS: Career[] = [
       "Levels.fyi",
       "Payscale"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2512",
+    "soc_code": "15-1252.00",
+    "job_zone": 4
   },
   {
     "id": "product-designer",
@@ -2430,7 +2509,10 @@ export const CAREERS: Career[] = [
       "Payscale",
       "NodeFlair"
     ],
-    "last_updated": "2026-09-01"
+    "last_updated": "2026-09-01",
+    "psoc_code": "2512",
+    "soc_code": "15-1252.00",
+    "job_zone": 4
   },
   {
     "id": "ux-engineer",
@@ -2673,6 +2755,1003 @@ export const CAREERS: Career[] = [
       "U.S. BLS",
       "Levels.fyi",
       "Payscale"
+    ],
+    "last_updated": "2026-09-01"
+  },
+  {
+    "id": "graphic-designer",
+    "title": "Visual Graphic & Brand Identity Designer",
+    "field": "Design & Creative Arts",
+    "category_id": "design",
+    "category_name": "UI/UX & Creative Design",
+    "psoc_code": "2166",
+    "soc_code": "27-1024.00",
+    "job_zone": 3,
+    "tagline": "Craft visual identities, typography, branding assets, and marketing visuals that captivate audiences.",
+    "description": "Graphic & Brand Designers develop visual concepts and brand identities using digital illustration and layout tools. They translate brand messaging into cohesive visual assets across digital media, packaging, and print.",
+    "responsibilities": [
+      "Create comprehensive brand identity systems including logos, color palettes, and typography guidelines",
+      "Design marketing collateral, social media assets, and digital campaign visuals",
+      "Prepare print-ready files and collaborate with commercial printing providers",
+      "Collaborate with marketing teams to maintain visual brand consistency across channels",
+      "Present design rationale and brand storytelling to clients and stakeholders"
+    ],
+    "riasec_traits": [
+      "A",
+      "E",
+      "R"
+    ],
+    "work_style": "Creative studio rhythm, client-facing brand reviews, and focused vector/layout production.",
+    "core_skills": [
+      "Adobe Illustrator",
+      "Adobe Photoshop",
+      "Brand Identity",
+      "Typography",
+      "Visual Storytelling",
+      "Color Theory",
+      "Layout Design"
+    ],
+    "optional_skills": [
+      "Motion Graphics (After Effects)",
+      "Figma",
+      "Packaging Design",
+      "3D Modeling Basics (Blender)",
+      "Print Production Standards"
+    ],
+    "common_tools": [
+      "Adobe Creative Cloud",
+      "Illustrator",
+      "Photoshop",
+      "InDesign",
+      "Figma",
+      "Canva Pro"
+    ],
+    "education_paths": [
+      "TESDA National Certificate: Visual Graphic Design NC III",
+      "Bachelor of Fine Arts (BFA) in Advertising Arts, Multimedia Arts, or Graphic Design",
+      "Self-taught portfolio path with verified brand identity client work"
+    ],
+    "certifications": [
+      {
+        "name": "TESDA Visual Graphic Design NC III",
+        "cost": "Free / Subsidized (TESDA Accredited Centers)",
+        "provider": "TESDA Philippines",
+        "url": "https://www.tesda.gov.ph"
+      },
+      {
+        "name": "Adobe Certified Professional in Visual Design",
+        "cost": "$150",
+        "provider": "Certiport / Adobe",
+        "url": "https://certiport.pearsonvue.com/Certifications/Adobe/ACP/Overview"
+      },
+      {
+        "name": "CalArts Graphic Design Specialization",
+        "cost": "Low-cost (Coursera FinAid Available)",
+        "provider": "Coursera / CalArts",
+        "url": "https://www.coursera.org/specializations/graphic-design"
+      }
+    ],
+    "portfolio_projects": [
+      {
+        "title": "Full Brand Identity System & Brand Guidelines",
+        "description": "Comprehensive corporate identity package including logo suite, typography hierarchy, collateral, and 20-page brand manual.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Commercial Product Packaging & Label System",
+        "description": "3D mockups and print-ready die-cut packaging designs for a consumer beverage or cosmetics line.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Multi-Channel Social & Advertising Campaign",
+        "description": "Integrated digital ad set across Instagram, LinkedIn, and print banners with motion graphics snippets.",
+        "difficulty": "Foundational"
+      }
+    ],
+    "salary_data": {
+      "philippines": {
+        "currency": "PHP",
+        "entry_level": "\u20b1240,000 \u2013 \u20b1420,000 / year (\u20b120k - \u20b135k/mo)",
+        "mid_level": "\u20b1480,000 \u2013 \u20b1840,000 / year (\u20b140k - \u20b170k/mo)",
+        "senior_level": "\u20b1900,000 \u2013 \u20b11,800,000+ / year (\u20b175k - \u20b1150k+/mo)",
+        "source": "JobStreet Philippines & DOLE Occupational Benchmark",
+        "updated_at": "2026-Q1"
+      },
+      "global_usd": {
+        "currency": "USD",
+        "entry_level": "$45,000 \u2013 $60,000 / year",
+        "mid_level": "$65,000 \u2013 $90,000 / year",
+        "senior_level": "$95,000 \u2013 $140,000+ / year",
+        "source": "U.S. Bureau of Labor Statistics (Graphic Designers)",
+        "updated_at": "2026-Q1"
+      }
+    },
+    "learning_resources": [
+      {
+        "title": "TESDA Visual Graphic Design Training Regulations",
+        "type": "TVET Competency Guide",
+        "cost": "Free",
+        "provider": "TESDA",
+        "url": "https://www.tesda.gov.ph"
+      },
+      {
+        "title": "Creative Live Design Fundamentals",
+        "type": "Video Tutorials",
+        "cost": "Free/Freemium",
+        "provider": "CreativeLive",
+        "url": "https://www.creativelive.com"
+      },
+      {
+        "title": "Adobe Illustrator Classroom in a Book",
+        "type": "Official Tutorial Series",
+        "cost": "Free Guides",
+        "provider": "Adobe Help Center",
+        "url": "https://helpx.adobe.com/illustrator.html"
+      }
+    ],
+    "related_careers": [
+      "ui-designer",
+      "ux-designer",
+      "technical-writer"
+    ],
+    "sources": [
+      "Philippine Statistics Authority (PSOC 2166)",
+      "TESDA Training Regulations",
+      "U.S. Bureau of Labor Statistics"
+    ],
+    "last_updated": "2026-09-01"
+  },
+  {
+    "id": "digital-marketing-strategist",
+    "title": "Digital Marketing & Growth Strategist",
+    "field": "Business, Marketing & Strategy",
+    "category_id": "business_marketing",
+    "category_name": "Business & Digital Marketing",
+    "psoc_code": "2431",
+    "soc_code": "13-1161.00",
+    "job_zone": 4,
+    "tagline": "Drive customer acquisition, brand reach, and revenue growth through data-backed multi-channel campaigns.",
+    "description": "Digital Marketing Strategists architect and execute cross-channel customer acquisition campaigns using SEO, performance advertising, content strategy, and conversion rate optimization (CRO) to drive measurable business growth.",
+    "responsibilities": [
+      "Formulate omnichannel marketing strategies spanning search, social, email, and paid media",
+      "Manage PPC advertising budgets across Google Ads, Meta Ads, and LinkedIn Ads with strict ROI targets",
+      "Conduct keyword research, technical SEO audits, and content optimization workflows",
+      "Analyze funnel analytics in Google Analytics 4 (GA4) to identify drop-offs and conversion opportunities",
+      "A/B test landing pages and email automations to maximize customer retention and lifetime value (LTV)"
+    ],
+    "riasec_traits": [
+      "E",
+      "A",
+      "I"
+    ],
+    "work_style": "Analytical yet creative, fast-paced campaign cycles, and executive growth reporting.",
+    "core_skills": [
+      "Digital Marketing",
+      "SEO & Content Strategy",
+      "Google Analytics 4 (GA4)",
+      "Paid Media & PPC",
+      "Conversion Rate Optimization (CRO)",
+      "Copywriting",
+      "A/B Testing"
+    ],
+    "optional_skills": [
+      "Email Marketing Automation (HubSpot/Klaviyo)",
+      "SQL Basics",
+      "Marketing Psychology",
+      "Social Media Advertising",
+      "CRM Systems"
+    ],
+    "common_tools": [
+      "Google Analytics 4",
+      "Google Ads",
+      "Meta Ads Manager",
+      "SEMrush / Ahrefs",
+      "HubSpot",
+      "Looker Studio"
+    ],
+    "education_paths": [
+      "Bachelor's degree in Marketing, Business Administration, Communications, or Information Systems",
+      "Industry professional certifications with hands-on campaign portfolio"
+    ],
+    "certifications": [
+      {
+        "name": "Google Digital Marketing & E-commerce Professional Certificate",
+        "cost": "Free / Low-cost",
+        "provider": "Google / Coursera",
+        "url": "https://grow.google/certificates/digital-marketing-ecommerce/"
+      },
+      {
+        "name": "HubSpot Inbound Marketing & Content Marketing Certification",
+        "cost": "Free",
+        "provider": "HubSpot Academy",
+        "url": "https://academy.hubspot.com/"
+      },
+      {
+        "name": "Meta Certified Digital Marketing Associate",
+        "cost": "$99",
+        "provider": "Meta Blueprint",
+        "url": "https://www.facebook.com/business/learn/certification"
+      }
+    ],
+    "portfolio_projects": [
+      {
+        "title": "End-to-End Search Engine Optimization (SEO) Case Study",
+        "description": "Keyword strategy, on-page optimization, and technical audit that grew organic impressions by 150%+ over 90 days.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Multi-Channel Paid Acquisition Campaign Plan & ROAS Model",
+        "description": "Complete media plan, audience segmentations, ad creative copies, and budget allocation model with target CAC/ROAS.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Automated Email Lead Nurturing & Drip Sequence",
+        "description": "5-stage behavioral trigger email workflow designed to convert freemium signups to paid subscribers.",
+        "difficulty": "Foundational"
+      }
+    ],
+    "salary_data": {
+      "philippines": {
+        "currency": "PHP",
+        "entry_level": "\u20b1300,000 \u2013 \u20b1540,000 / year (\u20b125k - \u20b145k/mo)",
+        "mid_level": "\u20b1600,000 \u2013 \u20b11,200,000 / year (\u20b150k - \u20b1100k/mo)",
+        "senior_level": "\u20b11,200,000 \u2013 \u20b12,400,000+ / year (\u20b1100k - \u20b1200k+/mo)",
+        "source": "JobStreet Philippines & Payscale Digital Marketing Benchmarks",
+        "updated_at": "2026-Q1"
+      },
+      "global_usd": {
+        "currency": "USD",
+        "entry_level": "$55,000 \u2013 $75,000 / year",
+        "mid_level": "$80,000 \u2013 $115,000 / year",
+        "senior_level": "$120,000 \u2013 $170,000+ / year",
+        "source": "U.S. Bureau of Labor Statistics (Market Research Analysts)",
+        "updated_at": "2026-Q1"
+      }
+    },
+    "learning_resources": [
+      {
+        "title": "Google Skillshop (Ads & Analytics Certification Courses)",
+        "type": "Interactive Certification",
+        "cost": "Free",
+        "provider": "Google",
+        "url": "https://skillshop.withgoogle.com/"
+      },
+      {
+        "title": "HubSpot Academy Digital Marketing Courses",
+        "type": "Comprehensive Guides",
+        "cost": "Free",
+        "provider": "HubSpot",
+        "url": "https://academy.hubspot.com/"
+      },
+      {
+        "title": "Moz Beginner's Guide to SEO",
+        "type": "Open Documentation",
+        "cost": "Free",
+        "provider": "Moz",
+        "url": "https://moz.com/beginners-guide-to-seo"
+      }
+    ],
+    "related_careers": [
+      "product-manager",
+      "data-analyst",
+      "technical-writer"
+    ],
+    "sources": [
+      "Philippine Statistics Authority (PSOC 2431)",
+      "Google Digital Growth Benchmarks",
+      "U.S. BLS"
+    ],
+    "last_updated": "2026-09-01"
+  },
+  {
+    "id": "registered-nurse",
+    "title": "Registered Nurse & Clinical Specialist",
+    "field": "Healthcare & Life Sciences",
+    "category_id": "healthcare",
+    "category_name": "Healthcare & Life Sciences",
+    "psoc_code": "2221",
+    "soc_code": "29-1141.00",
+    "job_zone": 4,
+    "tagline": "Deliver compassionate, life-saving patient care, clinical assessment, and health advocacy.",
+    "description": "Registered Nurses provide direct patient care, administer medications, monitor clinical vital signs, collaborate with multidisciplinary medical teams, and educate patients and families on disease management and recovery.",
+    "responsibilities": [
+      "Perform comprehensive patient assessments, triage, and continuous vital sign monitoring",
+      "Administer medications, IV therapies, and clinical treatments following strict medical protocols",
+      "Maintain meticulous and confidential patient records in Electronic Health Record (EHR) systems",
+      "Collaborate with physicians, pharmacists, and allied healthcare professionals to optimize care plans",
+      "Educate patients and caregivers on post-discharge care, preventive health, and medication adherence"
+    ],
+    "riasec_traits": [
+      "S",
+      "I",
+      "R"
+    ],
+    "work_style": "High-empathy, fast-paced clinical shifts, critical decision-making, and patient-first care.",
+    "core_skills": [
+      "Patient Care & Assessment",
+      "Clinical Documentation",
+      "Health Informatics & EHR",
+      "Medication Administration",
+      "Infection Control",
+      "Emergency Triage",
+      "Vital Signs Monitoring"
+    ],
+    "optional_skills": [
+      "Critical Care (ICU) Nursing",
+      "Pediatric Care",
+      "Public Health Nursing",
+      "Clinical Research Coordination",
+      "BLS / ACLS Certification"
+    ],
+    "common_tools": [
+      "Epic / Cerner EHR",
+      "Vital Signs Monitors",
+      "Infusion Pumps",
+      "Glucometers",
+      "Electronic Stethoscopes"
+    ],
+    "education_paths": [
+      "Bachelor of Science in Nursing (BSN) \u2014 4-year accredited degree",
+      "Passing the Philippine Nursing Licensure Examination (PNLE) administered by PRC",
+      "NCLEX-RN certification for international / overseas clinical practice"
+    ],
+    "certifications": [
+      {
+        "name": "Philippine Registered Nurse License (PRC-RN)",
+        "cost": "Official Board Exam",
+        "provider": "Professional Regulation Commission (PRC)",
+        "url": "https://www.prc.gov.ph"
+      },
+      {
+        "name": "Basic Life Support (BLS) & Advanced Cardiac Life Support (ACLS)",
+        "cost": "\u20b13,500 \u2013 \u20b16,000",
+        "provider": "Philippine Heart Association / AHA",
+        "url": "https://cpr.heart.org/"
+      },
+      {
+        "name": "NCLEX-RN (US / International Licensure)",
+        "cost": "$200 + International fee",
+        "provider": "NCSBN",
+        "url": "https://www.ncsbn.org/nclex.page"
+      }
+    ],
+    "portfolio_projects": [
+      {
+        "title": "Evidence-Based Nursing Care Plan & Clinical Case Study",
+        "description": "Detailed diagnosis, outcome identification, nursing interventions, and rationales for complex patient cases.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Hospital Infection Prevention & Control Protocol Guide",
+        "description": "Standardized hospital checklist and training deck adhering to WHO and DOH infection prevention guidelines.",
+        "difficulty": "Foundational"
+      },
+      {
+        "title": "Community Health Assessment & Family Wellness Program",
+        "description": "Barangay health survey data analysis and actionable nutrition/vaccination educational outreach plan.",
+        "difficulty": "Intermediate"
+      }
+    ],
+    "salary_data": {
+      "philippines": {
+        "currency": "PHP",
+        "entry_level": "\u20b1240,000 \u2013 \u20b1420,000 / year (\u20b120k - \u20b135k/mo)",
+        "mid_level": "\u20b1450,000 \u2013 \u20b1720,000 / year (\u20b137k - \u20b160k/mo)",
+        "senior_level": "\u20b1750,000 \u2013 \u20b11,400,000+ / year (\u20b162k - \u20b1115k+/mo)",
+        "source": "DOH Salary Grade Tables & Private Hospital Benchmarks",
+        "updated_at": "2026-Q1"
+      },
+      "global_usd": {
+        "currency": "USD",
+        "entry_level": "$60,000 \u2013 $75,000 / year",
+        "mid_level": "$80,000 \u2013 $105,000 / year",
+        "senior_level": "$110,000 \u2013 $145,000+ / year",
+        "source": "U.S. Bureau of Labor Statistics (Registered Nurses)",
+        "updated_at": "2026-Q1"
+      }
+    },
+    "learning_resources": [
+      {
+        "title": "World Health Organization (WHO) Open Learning Channels",
+        "type": "Clinical Open Courses",
+        "cost": "Free",
+        "provider": "WHO",
+        "url": "https://openwho.org/"
+      },
+      {
+        "title": "RegisteredNurseRN Clinical Guides & Video Lessons",
+        "type": "Interactive Nursing Education",
+        "cost": "Free",
+        "provider": "RegisteredNurseRN",
+        "url": "https://www.registerednursern.com/"
+      },
+      {
+        "title": "Department of Health (DOH) Clinical Practice Guidelines",
+        "type": "Statutory Healthcare Standards",
+        "cost": "Free",
+        "provider": "DOH Philippines",
+        "url": "https://doh.gov.ph"
+      }
+    ],
+    "related_careers": [
+      "health-informatics-specialist",
+      "secondary-educator"
+    ],
+    "sources": [
+      "Philippine Statistics Authority (PSOC 2221)",
+      "Professional Regulation Commission (PRC)",
+      "U.S. BLS"
+    ],
+    "last_updated": "2026-09-01"
+  },
+  {
+    "id": "civil-engineer",
+    "title": "Civil Engineer & Infrastructure Project Lead",
+    "field": "Engineering, Construction & Architecture",
+    "category_id": "engineering",
+    "category_name": "Engineering & Architecture",
+    "psoc_code": "2142",
+    "soc_code": "17-2051.00",
+    "job_zone": 4,
+    "tagline": "Design, inspect, and build resilient infrastructure, bridges, buildings, and transportation networks.",
+    "description": "Civil Engineers plan, design, and supervise the construction and maintenance of building structures and public infrastructure including highways, water supply networks, bridges, and commercial complexes.",
+    "responsibilities": [
+      "Perform structural calculations, stress analyses, and geotechnical site evaluations",
+      "Prepare detailed engineering drawings, architectural blueprints, and 3D BIM models",
+      "Conduct quantity surveying, material cost estimations, and project procurement plans",
+      "Supervise on-site construction activities ensuring compliance with National Building Code and safety standards",
+      "Liaise with local government units (LGUs), environmental agencies, and project contractors"
+    ],
+    "riasec_traits": [
+      "R",
+      "I",
+      "C"
+    ],
+    "work_style": "Rigorous engineering calculations, on-site field inspections, and multi-contractor coordination.",
+    "core_skills": [
+      "Structural Analysis",
+      "AutoCAD",
+      "Building Information Modeling (BIM)",
+      "Quantity Surveying",
+      "Project Scheduling",
+      "Site Inspection & Quality Control",
+      "National Building Code Compliance"
+    ],
+    "optional_skills": [
+      "STAAD.Pro / ETABS",
+      "Geotechnical Engineering",
+      "Primavera P6 / MS Project",
+      "Green Building Standards (LEED/BERDE)",
+      "Hydrology & Drainage Design"
+    ],
+    "common_tools": [
+      "AutoCAD",
+      "ETABS",
+      "STAAD.Pro",
+      "Revit",
+      "MS Project",
+      "Total Station Surveying Tools"
+    ],
+    "education_paths": [
+      "Bachelor of Science in Civil Engineering (BSCE) \u2014 4-year accredited degree",
+      "Passing the Civil Engineering Licensure Examination administered by PRC",
+      "Continuing Professional Development (CPD) accreditation through PICE"
+    ],
+    "certifications": [
+      {
+        "name": "Civil Engineer PRC Board License",
+        "cost": "Official Board Exam",
+        "provider": "Professional Regulation Commission (PRC)",
+        "url": "https://www.prc.gov.ph"
+      },
+      {
+        "name": "Autodesk Certified Professional in AutoCAD / Revit",
+        "cost": "$150",
+        "provider": "Autodesk / Certiport",
+        "url": "https://www.autodesk.com/certification"
+      },
+      {
+        "name": "DOLE Construction Occupational Safety & Health (COSH)",
+        "cost": "\u20b14,000 \u2013 \u20b16,000",
+        "provider": "DOLE-OSHC Accredited Centers",
+        "url": "https://oshc.dole.gov.ph"
+      }
+    ],
+    "portfolio_projects": [
+      {
+        "title": "Multi-Story Reinforced Concrete Building Structural Analysis",
+        "description": "Full structural design report with seismic loads calculation, beam-column schedule, and ETABS model output.",
+        "difficulty": "Advanced"
+      },
+      {
+        "title": "Drainage System Master Plan & Flood Mitigation Model",
+        "description": "Hydrological watershed calculations, pipe sizing, and retention basin design for a residential subdivision.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Bill of Quantities (BOQ) & Detailed Cost Estimation",
+        "description": "Comprehensive quantity take-off spreadsheet and material price analysis for a 2-story commercial structure.",
+        "difficulty": "Foundational"
+      }
+    ],
+    "salary_data": {
+      "philippines": {
+        "currency": "PHP",
+        "entry_level": "\u20b1260,000 \u2013 \u20b1450,000 / year (\u20b122k - \u20b137k/mo)",
+        "mid_level": "\u20b1500,000 \u2013 \u20b1960,000 / year (\u20b142k - \u20b180k/mo)",
+        "senior_level": "\u20b11,000,000 \u2013 \u20b12,000,000+ / year (\u20b183k - \u20b1165k+/mo)",
+        "source": "Philippine Institute of Civil Engineers (PICE) & JobStreet Benchmark",
+        "updated_at": "2026-Q1"
+      },
+      "global_usd": {
+        "currency": "USD",
+        "entry_level": "$65,000 \u2013 $80,000 / year",
+        "mid_level": "$88,000 \u2013 $120,000 / year",
+        "senior_level": "$125,000 \u2013 $170,000+ / year",
+        "source": "U.S. Bureau of Labor Statistics (Civil Engineers)",
+        "updated_at": "2026-Q1"
+      }
+    },
+    "learning_resources": [
+      {
+        "title": "MIT OpenCourseWare (Structural & Civil Engineering)",
+        "type": "Open University Course",
+        "cost": "Free",
+        "provider": "MIT OCW",
+        "url": "https://ocw.mit.edu/"
+      },
+      {
+        "title": "Autodesk Design Academy (Revit & AutoCAD Tutorials)",
+        "type": "Interactive 3D Tutorials",
+        "cost": "Free",
+        "provider": "Autodesk",
+        "url": "https://www.autodesk.com/design-academy"
+      },
+      {
+        "title": "National Building Code of the Philippines (PD 1096)",
+        "type": "Statutory Standards Guide",
+        "cost": "Free",
+        "provider": "DPWH Philippines",
+        "url": "https://www.dpwh.gov.ph"
+      }
+    ],
+    "related_careers": [
+      "commercial-electrician",
+      "hvac-technician"
+    ],
+    "sources": [
+      "Philippine Statistics Authority (PSOC 2142)",
+      "Professional Regulation Commission (PRC)",
+      "DPWH",
+      "U.S. BLS"
+    ],
+    "last_updated": "2026-09-01"
+  },
+  {
+    "id": "certified-public-accountant",
+    "title": "Certified Public Accountant & Financial Auditor",
+    "field": "Finance, Accounting & Economics",
+    "category_id": "finance_accounting",
+    "category_name": "Finance & Accounting",
+    "psoc_code": "2411",
+    "soc_code": "13-2011.00",
+    "job_zone": 4,
+    "tagline": "Ensure financial integrity, tax statutory compliance, auditing excellence, and corporate fiscal health.",
+    "description": "Certified Public Accountants (CPAs) manage corporate financial records, prepare statutory financial statements, conduct internal/external audits, calculate corporate taxes, and provide strategic advisory to executives.",
+    "responsibilities": [
+      "Prepare monthly and year-end Balance Sheets, Income Statements, and Cash Flow Statements",
+      "Ensure statutory tax compliance and filing with the Bureau of Internal Revenue (BIR)",
+      "Perform rigorous financial auditing and test internal controls for risk mitigation",
+      "Reconcile complex multi-currency bank accounts, general ledgers, and accounts payable/receivable",
+      "Advise leadership on cost optimization, capital expenditure, and budgetary forecasting"
+    ],
+    "riasec_traits": [
+      "C",
+      "E",
+      "I"
+    ],
+    "work_style": "High-precision financial compliance, systematic verification, and executive financial reporting.",
+    "core_skills": [
+      "Financial Accounting",
+      "General Ledger Bookkeeping",
+      "Tax Compliance (BIR)",
+      "Financial Auditing",
+      "Financial Statement Analysis",
+      "Excel Financial Modeling",
+      "Internal Controls"
+    ],
+    "optional_skills": [
+      "QuickBooks / Xero / SAP",
+      "IFRS / PFRS Standards",
+      "Forensic Accounting",
+      "Budgeting & Forecasting",
+      "Corporate Finance"
+    ],
+    "common_tools": [
+      "SAP ERP",
+      "QuickBooks",
+      "Xero",
+      "Advanced MS Excel",
+      "Taxumo / BIR eFPS",
+      "AuditBoard"
+    ],
+    "education_paths": [
+      "Bachelor of Science in Accountancy (BSA) \u2014 4-year accredited degree",
+      "Passing the Certified Public Accountant Licensure Exam (CPALE) administered by PRC",
+      "TESDA Bookkeeping NC III for foundational vocational bookkeeping track"
+    ],
+    "certifications": [
+      {
+        "name": "Certified Public Accountant (PRC-CPA License)",
+        "cost": "Official Board Exam",
+        "provider": "Professional Regulation Commission (PRC)",
+        "url": "https://www.prc.gov.ph"
+      },
+      {
+        "name": "TESDA Bookkeeping NC III",
+        "cost": "Free / Subsidized",
+        "provider": "TESDA Philippines",
+        "url": "https://www.tesda.gov.ph"
+      },
+      {
+        "name": "Certified Management Accountant (CMA)",
+        "cost": "$400 \u2013 $800",
+        "provider": "Institute of Management Accountants (IMA)",
+        "url": "https://www.imanet.org"
+      }
+    ],
+    "portfolio_projects": [
+      {
+        "title": "Complete 3-Statement Financial Model & Valuation Forecast",
+        "description": "Integrated Income Statement, Balance Sheet, and DCF Valuation model in Excel with sensitivity analysis.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Corporate BIR Tax Compliance & Audit Defense Documentation",
+        "description": "Mock end-of-year tax return package with withholding tax schedules and deductible expense verification.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Internal Controls Assessment & Risk Mitigation Matrix",
+        "description": "Comprehensive audit checklist assessing procurement and payroll controls with remediation workflows.",
+        "difficulty": "Foundational"
+      }
+    ],
+    "salary_data": {
+      "philippines": {
+        "currency": "PHP",
+        "entry_level": "\u20b1300,000 \u2013 \u20b1540,000 / year (\u20b125k - \u20b145k/mo)",
+        "mid_level": "\u20b1600,000 \u2013 \u20b11,200,000 / year (\u20b150k - \u20b1100k/mo)",
+        "senior_level": "\u20b11,300,000 \u2013 \u20b12,600,000+ / year (\u20b1108k - \u20b1215k+/mo)",
+        "source": "Philippine Institute of Certified Public Accountants (PICPA) & JobStreet",
+        "updated_at": "2026-Q1"
+      },
+      "global_usd": {
+        "currency": "USD",
+        "entry_level": "$60,000 \u2013 $78,000 / year",
+        "mid_level": "$82,000 \u2013 $115,000 / year",
+        "senior_level": "$125,000 \u2013 $180,000+ / year",
+        "source": "U.S. Bureau of Labor Statistics (Accountants & Auditors)",
+        "updated_at": "2026-Q1"
+      }
+    },
+    "learning_resources": [
+      {
+        "title": "PICPA Professional Standards & CPD Webinars",
+        "type": "Statutory Accounting Frameworks",
+        "cost": "Free/Member",
+        "provider": "PICPA",
+        "url": "https://www.picpa.com.ph"
+      },
+      {
+        "title": "AccountingCoach (Free Accounting & Bookkeeping Guides)",
+        "type": "Interactive Explanations",
+        "cost": "Free",
+        "provider": "AccountingCoach",
+        "url": "https://www.accountingcoach.com/"
+      },
+      {
+        "title": "Corporate Finance Institute (CFI) Free Resources",
+        "type": "Financial Modeling Templates",
+        "cost": "Free",
+        "provider": "CFI",
+        "url": "https://corporatefinanceinstitute.com/"
+      }
+    ],
+    "related_careers": [
+      "data-analyst",
+      "product-manager"
+    ],
+    "sources": [
+      "Philippine Statistics Authority (PSOC 2411)",
+      "PRC Board of Accountancy",
+      "U.S. BLS"
+    ],
+    "last_updated": "2026-09-01"
+  },
+  {
+    "id": "secondary-educator",
+    "title": "High School STEM & Digital Skills Educator",
+    "field": "Education, Teaching & Training",
+    "category_id": "education",
+    "category_name": "Education & Training",
+    "psoc_code": "2330",
+    "soc_code": "25-2031.00",
+    "job_zone": 4,
+    "tagline": "Inspire, teach, and equip the next generation of students with critical STEM and digital competencies.",
+    "description": "Secondary Educators design and deliver engaging curricula in science, mathematics, technology, and humanities for junior and senior high school students, fostering critical thinking, student development, and digital literacy.",
+    "responsibilities": [
+      "Plan and execute daily lesson plans aligned with DepEd K-12 curriculum competencies",
+      "Design formative and summative assessments, quizzes, and hands-on laboratory projects",
+      "Manage classroom dynamics and facilitate collaborative learning environments",
+      "Integrate Educational Technology (EdTech) and Learning Management Systems (LMS) into instruction",
+      "Conduct parent-teacher conferences and provide individualized academic mentoring"
+    ],
+    "riasec_traits": [
+      "S",
+      "A",
+      "I"
+    ],
+    "work_style": "Student-centered pedagogy, active classroom facilitation, mentorship, and creative lesson design.",
+    "core_skills": [
+      "Curriculum & Lesson Planning",
+      "Classroom Management",
+      "Educational Technology & LMS",
+      "Student Assessment & Rubrics",
+      "Pedagogical Content Knowledge",
+      "Workshop Facilitation",
+      "Public Speaking"
+    ],
+    "optional_skills": [
+      "Differentiated Instruction",
+      "Special Education Inclusivity",
+      "STEM Project-Based Learning (PBL)",
+      "Instructional Design",
+      "Python for Education"
+    ],
+    "common_tools": [
+      "Google Classroom",
+      "Canvas LMS",
+      "Canva for Education",
+      "Kahoot / Quizizz",
+      "MS Office 365",
+      "Interactive Whiteboards"
+    ],
+    "education_paths": [
+      "Bachelor of Secondary Education (BSEd) with major in Science, Math, or English",
+      "Passing the Licensure Examination for Teachers (LET) administered by PRC",
+      "Certificate in Professional Education (CPE) for non-education degree holders"
+    ],
+    "certifications": [
+      {
+        "name": "Professional Teacher PRC Board License (LET)",
+        "cost": "Official Board Exam",
+        "provider": "Professional Regulation Commission (PRC)",
+        "url": "https://www.prc.gov.ph"
+      },
+      {
+        "name": "Google Certified Educator (Level 1 & 2)",
+        "cost": "$10 \u2013 $25",
+        "provider": "Google for Education",
+        "url": "https://edu.google.com/intl/ALL_us/for-educators/certification-programs/"
+      },
+      {
+        "name": "Microsoft Certified Educator (MCE)",
+        "cost": "$127",
+        "provider": "Microsoft Education",
+        "url": "https://learn.microsoft.com/en-us/credentials/certifications/microsoft-certified-educator/"
+      }
+    ],
+    "portfolio_projects": [
+      {
+        "title": "10-Week Project-Based STEM Curriculum Module & Rubrics",
+        "description": "Complete unit plan with inquiry-based learning activities, rubric criteria, and digital lab exercises.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Interactive Digital Classroom & LMS Course Package",
+        "description": "Structured Google Classroom / Canvas course shell containing modular quizzes, video guides, and peer reviews.",
+        "difficulty": "Foundational"
+      },
+      {
+        "title": "Student Learning Analytics & Remediation Intervention Plan",
+        "description": "Data assessment tracking student performance metrics and tailored differentiated learning interventions.",
+        "difficulty": "Intermediate"
+      }
+    ],
+    "salary_data": {
+      "philippines": {
+        "currency": "PHP",
+        "entry_level": "\u20b1324,000 \u2013 \u20b1480,000 / year (\u20b127k - \u20b140k/mo / DepEd Teacher I)",
+        "mid_level": "\u20b1500,000 \u2013 \u20b1800,000 / year (\u20b141k - \u20b166k/mo)",
+        "senior_level": "\u20b1850,000 \u2013 \u20b11,500,000+ / year (\u20b170k - \u20b1125k+/mo)",
+        "source": "Department of Budget & Management (DBM) Salary Standardization Law & DepEd",
+        "updated_at": "2026-Q1"
+      },
+      "global_usd": {
+        "currency": "USD",
+        "entry_level": "$48,000 \u2013 $62,000 / year",
+        "mid_level": "$65,000 \u2013 $88,000 / year",
+        "senior_level": "$92,000 \u2013 $120,000+ / year",
+        "source": "U.S. Bureau of Labor Statistics (High School Teachers)",
+        "updated_at": "2026-Q1"
+      }
+    },
+    "learning_resources": [
+      {
+        "title": "DepEd Learning Resource Portal",
+        "type": "Curriculum Standards & Modules",
+        "cost": "Free",
+        "provider": "Department of Education Philippines",
+        "url": "https://lrmds.deped.gov.ph/"
+      },
+      {
+        "title": "Khan Academy Teacher Toolkit",
+        "type": "Interactive Learning Platform",
+        "cost": "Free",
+        "provider": "Khan Academy",
+        "url": "https://www.khanacademy.org/resources/teacher-resources"
+      },
+      {
+        "title": "Edutopia (George Lucas Educational Foundation)",
+        "type": "Pedagogy & Classroom Strategies",
+        "cost": "Free",
+        "provider": "Edutopia",
+        "url": "https://www.edutopia.org/"
+      }
+    ],
+    "related_careers": [
+      "technical-writer",
+      "registered-nurse"
+    ],
+    "sources": [
+      "Philippine Statistics Authority (PSOC 2330)",
+      "Department of Education (DepEd)",
+      "PRC Board of Professional Teachers",
+      "U.S. BLS"
+    ],
+    "last_updated": "2026-09-01"
+  },
+  {
+    "id": "commercial-electrician",
+    "title": "Industrial & Commercial Electrician",
+    "field": "Skilled Trades & Technical Services",
+    "category_id": "skilled_trades",
+    "category_name": "Skilled Trades & Technical Services",
+    "psoc_code": "7411",
+    "soc_code": "47-2111.00",
+    "job_zone": 3,
+    "tagline": "Install, maintain, and troubleshoot electrical power systems, industrial machinery, and smart grids.",
+    "description": "Commercial & Industrial Electricians install, inspect, and repair electrical power, lighting, control systems, and machinery in commercial buildings, manufacturing plants, and industrial complexes following the Philippine Electrical Code.",
+    "responsibilities": [
+      "Read and interpret electrical blueprints, circuit schematics, and single-line diagrams",
+      "Install electrical conduits, wiring harnesses, distribution panels, and switchgear equipment",
+      "Perform preventive maintenance and electrical troubleshooting using digital multimeters and thermal scanners",
+      "Ensure full compliance with the Philippine Electrical Code (PEC) and Occupational Safety standards",
+      "Connect high-capacity electrical equipment, backup generators, and solar photovoltaic (PV) systems"
+    ],
+    "riasec_traits": [
+      "R",
+      "C",
+      "I"
+    ],
+    "work_style": "Hands-on diagnostic precision, practical field safety protocols, and physical technical building.",
+    "core_skills": [
+      "Electrical Wiring & Installation",
+      "Schematic & Blueprint Reading",
+      "Preventive Maintenance",
+      "Circuit Troubleshooting",
+      "Multimeter & Diagnostic Testing",
+      "Philippine Electrical Code (PEC)",
+      "Lockout/Tagout Safety (LOTO)"
+    ],
+    "optional_skills": [
+      "Solar PV System Installation",
+      "Motor Controls & PLC Programming Basics",
+      "Industrial Switchgear",
+      "Thermal Imaging Inspection",
+      "HVAC Electrical Systems"
+    ],
+    "common_tools": [
+      "Digital Multimeter / Clamp Meter",
+      "Conduit Bender",
+      "Wire Strippers & Crimpers",
+      "Megohmmeter (Megger)",
+      "Thermal Imaging Camera",
+      "Safety PPE"
+    ],
+    "education_paths": [
+      "TESDA National Certificate: Electrical Installation & Maintenance NC II and NC III",
+      "Registered Master Electrician (RME) Licensure Exam administered by PRC",
+      "Associate degree in Electrical Engineering Technology"
+    ],
+    "certifications": [
+      {
+        "name": "TESDA Electrical Installation and Maintenance NC II & NC III",
+        "cost": "Free / Subsidized",
+        "provider": "TESDA Philippines",
+        "url": "https://www.tesda.gov.ph"
+      },
+      {
+        "name": "Registered Master Electrician (PRC-RME License)",
+        "cost": "Official Board Exam",
+        "provider": "Professional Regulation Commission (PRC)",
+        "url": "https://www.prc.gov.ph"
+      },
+      {
+        "name": "TESDA Solar PV Installation NC II",
+        "cost": "Free / Subsidized",
+        "provider": "TESDA Philippines",
+        "url": "https://www.tesda.gov.ph"
+      }
+    ],
+    "portfolio_projects": [
+      {
+        "title": "Commercial Panelboard Load Schedule & Single-Line Diagram",
+        "description": "Complete electrical computation calculating total connected load, branch circuit breaker ratings, and main feeder sizing.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Industrial Motor Control Circuit Wiring Prototype",
+        "description": "Hands-on assembly of forward-reverse motor controller with overload protection and emergency stop switches.",
+        "difficulty": "Intermediate"
+      },
+      {
+        "title": "Grid-Tied Residential Solar Photovoltaic (PV) Layout Design",
+        "description": "Solar panel string sizing, inverter matching, and AC/DC disconnect wiring schematic.",
+        "difficulty": "Foundational"
+      }
+    ],
+    "salary_data": {
+      "philippines": {
+        "currency": "PHP",
+        "entry_level": "\u20b1220,000 \u2013 \u20b1360,000 / year (\u20b118k - \u20b130k/mo)",
+        "mid_level": "\u20b1420,000 \u2013 \u20b1720,000 / year (\u20b135k - \u20b160k/mo)",
+        "senior_level": "\u20b1780,000 \u2013 \u20b11,500,000+ / year (\u20b165k - \u20b1125k+/mo)",
+        "source": "TESDA Placement Data & IIEE Industry Salary Benchmarks",
+        "updated_at": "2026-Q1"
+      },
+      "global_usd": {
+        "currency": "USD",
+        "entry_level": "$50,000 \u2013 $65,000 / year",
+        "mid_level": "$70,000 \u2013 $95,000 / year",
+        "senior_level": "$100,000 \u2013 $135,000+ / year",
+        "source": "U.S. Bureau of Labor Statistics (Electricians)",
+        "updated_at": "2026-Q1"
+      }
+    },
+    "learning_resources": [
+      {
+        "title": "TESDA EIM Online Training Modules",
+        "type": "TVET Practical Modules",
+        "cost": "Free",
+        "provider": "e-TESDA Portal",
+        "url": "https://e-tesda.gov.ph/"
+      },
+      {
+        "title": "All About Circuits (Open Electrical Textbook)",
+        "type": "Open Technical Reference",
+        "cost": "Free",
+        "provider": "All About Circuits",
+        "url": "https://www.allaboutcircuits.com/"
+      },
+      {
+        "title": "Institute of Integrated Electrical Engineers (IIEE) Standards",
+        "type": "Professional Standards",
+        "cost": "Free/Member",
+        "provider": "IIEE Philippines",
+        "url": "https://iiee.org.ph"
+      }
+    ],
+    "related_careers": [
+      "civil-engineer",
+      "devops-engineer"
+    ],
+    "sources": [
+      "Philippine Statistics Authority (PSOC 7411)",
+      "TESDA Training Regulations",
+      "PRC Board of Electrical Engineering",
+      "U.S. BLS"
     ],
     "last_updated": "2026-09-01"
   }

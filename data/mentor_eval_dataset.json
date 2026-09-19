@@ -1,0 +1,251 @@
+[
+  {
+    "id": "eval_01",
+    "user_message": "Do I need to be good at design?",
+    "career_context": "UI/UX Designer",
+    "expected_behavior": "Directly answer whether strong design ability is necessary, explaining that visual hierarchy and layout are learned through practice rather than innate art talent.",
+    "failure_mode": "generic_career_response"
+  },
+  {
+    "id": "eval_02",
+    "user_message": "I'm actually not good at drawing.",
+    "career_context": "UI/UX Designer",
+    "expected_behavior": "Directly explain whether drawing or fine-art sketching is relevant to UI/UX design (Figma UI frames vs illustration).",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_03",
+    "user_message": "I'm scared I won't be good enough.",
+    "career_context": "Software Developer",
+    "expected_behavior": "Directly address user imposter syndrome and self-doubt with realistic reassurance without generic filler.",
+    "failure_mode": "ignores_personal_concern"
+  },
+  {
+    "id": "eval_04",
+    "user_message": "How many hours a day should I practice?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Provide concrete practice recommendations and emphasize that daily consistency (1-2 hours) beats marathon cramming.",
+    "failure_mode": "generic_template_opening"
+  },
+  {
+    "id": "eval_05",
+    "user_message": "I have school so I only have two hours a day.",
+    "career_context": "Software Developer",
+    "expected_behavior": "Adapt guidance directly to the 2-hour daily schedule, giving a realistic breakdown between learning and hands-on building.",
+    "failure_mode": "ignores_schedule_constraint"
+  },
+  {
+    "id": "eval_06",
+    "user_message": "What should I learn first?",
+    "conversation_context": [
+      {"role": "user", "content": "Is it easy to become a software developer?"},
+      {"role": "assistant", "content": "Programming is challenging at first, but completely learnable with consistent practice."}
+    ],
+    "career_context": "Software Developer",
+    "expected_behavior": "Use conversation history to identify software development and recommend a structured starting sequence (HTML/CSS -> JS -> Git).",
+    "failure_mode": "lacks_multi_turn_context"
+  },
+  {
+    "id": "eval_07",
+    "user_message": "Would I need a degree?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Explain how proof of work (GitHub repos, portfolio projects) is prioritized for tech hiring over formal degrees.",
+    "failure_mode": "generic_career_overview"
+  },
+  {
+    "id": "eval_08",
+    "user_message": "Would I need a degree to be a nurse?",
+    "career_context": "Registered Nurse",
+    "expected_behavior": "Explain that nursing in the Philippines is legally regulated by the PRC and requires an accredited BSN degree and board exam.",
+    "failure_mode": "incorrect_licensing_advice"
+  },
+  {
+    "id": "eval_09",
+    "user_message": "What if I change my mind later?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Reassure the user that digital and problem-solving skills are highly transferable, framing exploration as low-risk learning.",
+    "failure_mode": "forces_rigid_roadmap"
+  },
+  {
+    "id": "eval_10",
+    "user_message": "I don't even know if I like this career.",
+    "career_context": "UI/UX Designer",
+    "expected_behavior": "Help the user explore uncertainty through low-stakes mini-projects rather than forcing immediate commitment.",
+    "failure_mode": "assumes_user_wants_to_continue"
+  },
+  {
+    "id": "eval_11",
+    "user_message": "Do programmers need to be good at math?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Clarify that general programming requires basic logic and algebra rather than advanced calculus or higher math.",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_12",
+    "user_message": "What does a normal workday look like?",
+    "career_context": "UI/UX Designer",
+    "expected_behavior": "Describe a realistic daily split between focus building (Figma/research) and team syncs.",
+    "failure_mode": "generic_career_response"
+  },
+  {
+    "id": "eval_13",
+    "user_message": "Would this be difficult for someone who is shy?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Directly reassure introverts by explaining that software roles prioritize focused concentration and written async collaboration.",
+    "failure_mode": "ignores_personal_concern"
+  },
+  {
+    "id": "eval_14",
+    "user_message": "What is the difference between UI and UX?",
+    "career_context": "UI/UX Designer",
+    "expected_behavior": "Clearly distinguish visual interface design (UI) from user research and usability architecture (UX).",
+    "failure_mode": "unclear_comparison"
+  },
+  {
+    "id": "eval_15",
+    "user_message": "What is the difference between frontend and backend?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Distinguish browser client-side interfaces (HTML/CSS/JS/React) from server/database logic (APIs/databases).",
+    "failure_mode": "unclear_comparison"
+  },
+  {
+    "id": "eval_16",
+    "user_message": "How much do entry-level developers make in the Philippines?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Provide realistic local salary benchmarks (₱25k-₱45k/mo) and explain factors that drive growth.",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_17",
+    "user_message": "What if my parents want me to take accounting instead?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Provide empathetic, constructive guidance on discussing career interests and practical pathways with family.",
+    "failure_mode": "ignores_personal_concern"
+  },
+  {
+    "id": "eval_18",
+    "user_message": "Can I learn programming on a budget laptop?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Reassure the user that web development and basic programming run smoothly on budget hardware and free tools.",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_19",
+    "user_message": "Is AI going to replace junior developers?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Provide a balanced, grounded perspective on how AI tools enhance productivity while problem-solving and architectural judgment remain essential.",
+    "failure_mode": "generic_career_response"
+  },
+  {
+    "id": "eval_20",
+    "user_message": "Where should I find free practice projects?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Recommend reputable free platforms like freeCodeCamp, The Odin Project, and Frontend Mentor.",
+    "failure_mode": "generic_template_opening"
+  },
+  {
+    "id": "eval_21",
+    "user_message": "What tools do data analysts use most?",
+    "career_context": "Data Analyst",
+    "expected_behavior": "List core tools: SQL, Excel/Sheets, Power BI/Tableau, and Python.",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_22",
+    "user_message": "Do I need a license to be an electrician?",
+    "career_context": "Commercial Electrician",
+    "expected_behavior": "Explain TESDA NC II/NC III certifications and Registered Master Electrician (RME) requirements in the Philippines.",
+    "failure_mode": "incorrect_licensing_advice"
+  },
+  {
+    "id": "eval_23",
+    "user_message": "I feel overwhelmed by how much there is to learn.",
+    "career_context": "Software Developer",
+    "expected_behavior": "Directly address overwhelm by advising the user to focus on one narrow milestone at a time.",
+    "failure_mode": "ignores_personal_concern"
+  },
+  {
+    "id": "eval_24",
+    "user_message": "Can I switch from marketing to UI design?",
+    "career_context": "UI/UX Designer",
+    "expected_behavior": "Explain how marketing skills (user empathy, copywriting, conversion) translate directly into UX design.",
+    "failure_mode": "generic_career_response"
+  },
+  {
+    "id": "eval_25",
+    "user_message": "What should my first portfolio project be?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Suggest a simple interactive single-page app (e.g., interactive tracker, calculator, or responsive landing page).",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_26",
+    "user_message": "Is 28 too old to switch careers into tech?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Directly reassure the user that 28 is very common for career pivots and prior work experience is an asset.",
+    "failure_mode": "ignores_personal_concern"
+  },
+  {
+    "id": "eval_27",
+    "user_message": "What if I get stuck on a coding error?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Give practical troubleshooting steps: reading error messages, console logging, searching documentation, and isolating code blocks.",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_28",
+    "user_message": "How do remote jobs pay in the Philippines?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Explain international client rates, freelance platforms, and remote compensation tiers.",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_29",
+    "user_message": "What does a civil engineer do day to day?",
+    "career_context": "Civil Engineer",
+    "expected_behavior": "Describe site inspections, AutoCAD design checks, material testing, and contractor coordination.",
+    "failure_mode": "generic_career_response"
+  },
+  {
+    "id": "eval_30",
+    "user_message": "Do I need to know Figma before applying for internships?",
+    "career_context": "UI/UX Designer",
+    "expected_behavior": "Clarify that baseline familiarity with Figma auto-layout and components is standard for design internships.",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_31",
+    "user_message": "Is CPA exam hard in the Philippines?",
+    "career_context": "CPA Accountant",
+    "expected_behavior": "Acknowledge the rigorous CPALE board passing rates and recommend structured review school preparation.",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_32",
+    "user_message": "What if I fail my first job interview?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Frame interviews as feedback loops and explain how to review technical gaps after each attempt.",
+    "failure_mode": "ignores_personal_concern"
+  },
+  {
+    "id": "eval_33",
+    "user_message": "Can I learn Python in two months?",
+    "career_context": "Data Analyst",
+    "expected_behavior": "Give a realistic assessment: basic syntax and scripting are achievable in 2 months, with ongoing practice for advanced libraries.",
+    "failure_mode": "does_not_answer_question"
+  },
+  {
+    "id": "eval_34",
+    "user_message": "What is the difference between a certificate and a degree?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Compare short-term targeted credential programs with 4-year academic degrees.",
+    "failure_mode": "unclear_comparison"
+  },
+  {
+    "id": "eval_35",
+    "user_message": "How do I know when I'm ready to apply?",
+    "career_context": "Software Developer",
+    "expected_behavior": "Give concrete readiness criteria: 2-3 completed projects, ability to explain decisions, and comfort with basic git workflow.",
+    "failure_mode": "does_not_answer_question"
+  }
+]

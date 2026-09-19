@@ -192,7 +192,7 @@ export default function Home() {
                 </h3>
               </div>
               <p style={{ fontSize: 14, color: 'var(--muted-foreground)', margin: 0, lineHeight: 1.5 }}>
-                Take the 3-minute Discovery Assessment to get personalized career recommendations based on real industry data and RIASEC alignment.
+                Take the 3-minute Discovery Assessment to get personalized career recommendations based on your natural interests, strengths, and work preferences.
               </p>
             </div>
             <button
@@ -248,7 +248,7 @@ export default function Home() {
                 {recentCareersList.map((career: any, i: number) => (
                   <div
                     key={career.id}
-                    onClick={() => navigate('/explore')}
+                    onClick={() => navigate(`/career/${career.id}`)}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -317,7 +317,7 @@ export default function Home() {
                 {careers.slice(0, 3).map((career) => (
                   <div
                     key={career.id}
-                    onClick={() => navigate('/explore')}
+                    onClick={() => navigate(`/career/${career.id}`)}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
@@ -365,7 +365,7 @@ export default function Home() {
                       </div>
                     </div>
                     <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--navy)' }}>
-                      Explore →
+                      Explore Details →
                     </div>
                   </div>
                 ))}

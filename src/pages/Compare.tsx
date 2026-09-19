@@ -1,300 +1,416 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AppShell from '../components/AppShell';
-
-type CareerOption = {
-  title: string;
-  field: string;
-  salary: string;
-  salaryMid: number;
-  growth: string;
-  match: number;
-  workStyle: string;
-  education: string;
-  stress: string;
-  creativity: string;
-  social: string;
-  advancement: string;
-};
-
-const careerOptions: CareerOption[] = [
-  { title: 'UX Designer', field: 'Design', salary: '$95k – $145k', salaryMid: 120, growth: '+18%', match: 94, workStyle: 'Remote-friendly', education: "Bachelor's or self-taught", stress: 'Moderate', creativity: 'Very high', social: 'Moderate', advancement: 'Strong' },
-  { title: 'Product Manager', field: 'Product', salary: '$110k – $175k', salaryMid: 142, growth: '+21%', match: 89, workStyle: 'Hybrid', education: "Bachelor's + experience", stress: 'High', creativity: 'High', social: 'Very high', advancement: 'Very strong' },
-  { title: 'UX Researcher', field: 'Research', salary: '$88k – $130k', salaryMid: 109, growth: '+16%', match: 85, workStyle: 'Often remote', education: "Bachelor's in Psychology", stress: 'Low-Moderate', creativity: 'High', social: 'High', advancement: 'Moderate' },
-  { title: 'Data Analyst', field: 'Analytics', salary: '$72k – $115k', salaryMid: 93, growth: '+23%', match: 79, workStyle: 'Remote-friendly', education: "Bachelor's in Math/CS", stress: 'Moderate', creativity: 'Moderate', social: 'Low', advancement: 'Strong' },
-  { title: 'Brand Strategist', field: 'Marketing', salary: '$75k – $120k', salaryMid: 97, growth: '+14%', match: 76, workStyle: 'Hybrid', education: "Bachelor's in Marketing", stress: 'Moderate', creativity: 'Very high', social: 'High', advancement: 'Moderate' },
-  { title: 'Therapist', field: 'Healthcare', salary: '$60k – $98k', salaryMid: 79, growth: '+15%', match: 68, workStyle: 'Telehealth options', education: "Master's required", stress: 'High', creativity: 'Moderate', social: 'Very high', advancement: 'Steady' },
-];
-
-const metrics = [
-  { key: 'salary', label: 'Salary range' },
-  { key: 'growth', label: 'Job growth' },
-  { key: 'match', label: 'Your match' },
-  { key: 'workStyle', label: 'Work style' },
-  { key: 'education', label: 'Education needed' },
-  { key: 'stress', label: 'Stress level' },
-  { key: 'creativity', label: 'Creative demand' },
-  { key: 'social', label: 'Social interaction' },
-  { key: 'advancement', label: 'Advancement' },
-] as const;
-
-function getMatchColor(match: number) {
-  if (match >= 90) return 'var(--sage)';
-  if (match >= 80) return 'var(--navy-light)';
-  return 'var(--muted-foreground)';
-}
+import TOBEWidget from '../components/TOBEWidget';
+import { useCareer } from '../context/CareerContext';
+import { Career } from '../data/careersData';
 
 export default function Compare() {
-  const [selected, setSelected] = useState<CareerOption[]>([careerOptions[0], careerOptions[1]]);
-  const [pickerOpen, setPickerOpen] = useState<number | null>(null);
+  const navigate = useNavigate();
+  const { careers, getCareerMatchDetails, assessmentResults, createOrSetRoadmap, recordView } = useCareer();
 
-  const toggleCareer = (slot: number, career: CareerOption) => {
-    const newSelected = [...selected];
-    newSelected[slot] = career;
-    setSelected(newSelected);
-    setPickerOpen(null);
+  const [selectedCareers, setSelectedCareers] = useState<Career[]>([
+    careers.find((c) => c.id === 'frontend-developer') || careers[0],
+    careers.find((c) => c.id === 'ux-designer') || careers[1],
+  ]);
+  const [pickerSlot, setPickerSlot] = useState<number | null>(null);
+
+  const handleSelectCareer = (slot: number, career: Career) => {
+    const updated = [...selectedCareers];
+    updated[slot] = career;
+    setSelectedCareers(updated);
+    setPickerSlot(null);
   };
 
   const addSlot = () => {
-    if (selected.length < 3) {
-      const remaining = careerOptions.find((c) => !selected.find((s) => s.title === c.title));
-      if (remaining) setSelected([...selected, remaining]);
+    if (selectedCareers.length < 3) {
+      const remaining = careers.find((c) => !selectedCareers.some((s) => s.id === c.id));
+      if (remaining) setSelectedCareers([...selectedCareers, remaining]);
     }
   };
 
-  const removeSlot = (i: number) => {
-    setSelected(selected.filter((_, idx) => idx !== i));
+  const removeSlot = (slotIdx: number) => {
+    if (selectedCareers.length > 2) {
+      setSelectedCareers(selectedCareers.filter((_, idx) => idx !== slotIdx));
+    }
   };
 
-  const renderValue = (career: CareerOption, key: typeof metrics[number]['key']) => {
-    if (key === 'match') {
-      return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{ flex: 1, height: 4, background: 'var(--border)', borderRadius: 2, overflow: 'hidden' }}>
-            <div
-              style={{
-                height: '100%',
-                width: `${career.match}%`,
-                background: getMatchColor(career.match),
-                borderRadius: 2,
-                transition: 'width 0.8s ease',
-              }}
-            />
-          </div>
-          <span style={{ fontSize: 13, fontWeight: 700, color: getMatchColor(career.match), whiteSpace: 'nowrap' }}>
-            {career.match}%
-          </span>
+  const comparisonAttributes = [
+    {
+      id: 'category',
+      label: 'Domain Category',
+      render: (c: Career) => (
+        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--navy)' }}>
+          {c.category_name}
+        </span>
+      ),
+    },
+    {
+      id: 'work_style',
+      label: 'Work Style & Dynamic',
+      render: (c: Career) => (
+        <div style={{ fontSize: 13, color: 'var(--foreground)', fontWeight: 500 }}>
+          {c.work_style}
         </div>
-      );
-    }
-    if (key === 'salary') return <span style={{ fontSize: 14, fontWeight: 600 }}>{career.salary}</span>;
-    if (key === 'growth') return (
-      <span style={{ color: 'var(--sage)', fontWeight: 700, fontSize: 14 }}>{career.growth}</span>
-    );
-    return <span style={{ fontSize: 14, color: 'var(--foreground)' }}>{career[key]}</span>;
-  };
+      ),
+    },
+    {
+      id: 'education',
+      label: 'Typical Preparation',
+      render: (c: Career) => (
+        <div style={{ fontSize: 13, color: 'var(--foreground)' }}>
+          {c.education_paths[0] || 'Degree or Technical Certification'}
+        </div>
+      ),
+    },
+    {
+      id: 'alignment',
+      label: 'Assessment Alignment',
+      render: (c: Career) => {
+        if (!assessmentResults) {
+          return <span style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>Take assessment to view tier</span>;
+        }
+        const match = getCareerMatchDetails(c);
+        const isStrong = match.tier === 'Strong alignment';
+        const isWorth = match.tier === 'Worth exploring';
+        return (
+          <div>
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                padding: '3px 8px',
+                borderRadius: 10,
+                background: isStrong ? '#ECFDF5' : isWorth ? '#EFF6FF' : '#F8FAFC',
+                color: isStrong ? '#065F46' : isWorth ? '#1E40AF' : '#475569',
+                border: `1px solid ${isStrong ? '#A7F3D0' : isWorth ? '#BFDBFE' : '#E2E8F0'}`,
+                display: 'inline-block',
+                marginBottom: 4,
+              }}
+            >
+              ● {match.tier}
+            </span>
+            <div style={{ fontSize: 11, color: 'var(--muted-foreground)' }}>
+              Matched to interest profile
+            </div>
+          </div>
+        );
+      },
+    },
+    {
+      id: 'ph_salary',
+      label: 'Philippines Salary (PHP)',
+      render: (c: Career) => (
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--foreground)' }}>
+            {c.salary_data.philippines.entry_level}
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--muted-foreground)', marginTop: 2 }}>
+            Mid: {c.salary_data.philippines.mid_level.split('(')[0]}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'global_salary',
+      label: 'Global Remote (USD)',
+      render: (c: Career) => (
+        <div>
+          <div style={{ fontSize: 13, fontWeight: 600, color: 'var(--foreground)' }}>
+            {c.salary_data.global_usd.entry_level}
+          </div>
+          <div style={{ fontSize: 11, color: 'var(--muted-foreground)', marginTop: 2 }}>
+            Senior: {c.salary_data.global_usd.senior_level}
+          </div>
+        </div>
+      ),
+    },
+    {
+      id: 'work_style',
+      label: 'Working Style & Rhythm',
+      render: (c: Career) => (
+        <span style={{ fontSize: 13, color: 'var(--foreground)', lineHeight: 1.5 }}>
+          {c.work_style}
+        </span>
+      ),
+    },
+    {
+      id: 'core_skills',
+      label: 'Core Skills Required',
+      render: (c: Career) => (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
+          {c.core_skills.map((s) => (
+            <span key={s} style={{ fontSize: 11, padding: '2px 6px', background: 'var(--secondary)', color: 'var(--navy)', borderRadius: 4 }}>
+              {s}
+            </span>
+          ))}
+        </div>
+      ),
+    },
+    {
+      id: 'education_paths',
+      label: 'Primary Education & Licensure',
+      render: (c: Career) => (
+        <ul style={{ margin: 0, paddingLeft: 16, fontSize: 12, color: 'var(--foreground)', lineHeight: 1.5 }}>
+          {c.education_paths.map((p, idx) => (
+            <li key={idx} style={{ marginBottom: 3 }}>{p}</li>
+          ))}
+        </ul>
+      ),
+    },
+    {
+      id: 'credentials',
+      label: 'Key Credentials & Certs',
+      render: (c: Career) => (
+        <div style={{ fontSize: 12 }}>
+          {c.certifications.slice(0, 2).map((cert, idx) => (
+            <div key={idx} style={{ marginBottom: 4 }}>
+              <span style={{ fontWeight: 600, color: 'var(--navy)' }}>{cert.name}</span>
+              <span style={{ fontSize: 11, color: 'var(--muted-foreground)', display: 'block' }}>Provider: {cert.provider} ({cert.cost})</span>
+            </div>
+          ))}
+        </div>
+      ),
+    },
+  ];
 
   return (
     <AppShell>
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '56px 32px 80px' }}>
-        <div style={{ marginBottom: 48 }}>
-          <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-foreground)', marginBottom: 8 }}>
-            Compare
+      <div style={{ maxWidth: 1200, margin: '0 auto', padding: '56px 32px 80px' }}>
+        <div style={{ marginBottom: 40 }}>
+          <p style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted-foreground)', marginBottom: 6 }}>
+            Multi-Domain Comparison Matrix
           </p>
-          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 5vw, 44px)', fontWeight: 400, letterSpacing: '-0.025em', color: 'var(--foreground)' }}>
-            See careers side by side.
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4.5vw, 42px)', fontWeight: 400, letterSpacing: '-0.025em', color: 'var(--foreground)', margin: '0 0 12px' }}>
+            Compare pathways side by side.
           </h1>
+          <p style={{ fontSize: 15, color: 'var(--muted-foreground)', maxWidth: 680, lineHeight: 1.6 }}>
+            Analyze tradeoffs in salary, daily rhythms, licensure prerequisites, and skill requirements across multiple career options without artificial winners.
+          </p>
         </div>
 
-        {/* Career selectors */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${selected.length}, 1fr) ${selected.length < 3 ? '60px' : ''}`,
-            gap: 12,
-            marginBottom: 2,
-          }}
-        >
-          {selected.map((career, i) => (
-            <div key={i} style={{ position: 'relative' }}>
-              <div
-                style={{
-                  background: 'var(--primary)',
-                  borderRadius: 'calc(var(--radius) * 2) calc(var(--radius) * 2) 0 0',
-                  padding: '20px 20px 16px',
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                  <div>
-                    <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 4 }}>
-                      {career.field}
+        {/* Matrix comparison grid */}
+        <div style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'calc(var(--radius) * 2)', overflowX: 'auto', boxShadow: '0 4px 16px rgba(0,0,0,0.03)' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: 720 }}>
+            <thead>
+              <tr style={{ borderBottom: '2px solid var(--border)', background: '#FAF9F6' }}>
+                <th style={{ padding: '24px 20px', width: '22%', fontSize: 13, fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  Attribute
+                </th>
+                {selectedCareers.map((c, slotIdx) => (
+                  <th key={slotIdx} style={{ padding: '20px', width: `${78 / selectedCareers.length}%`, verticalAlign: 'top', position: 'relative' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 8 }}>
+                      <button
+                        onClick={() => setPickerSlot(slotIdx)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          fontSize: 12,
+                          fontWeight: 600,
+                          color: 'var(--navy)',
+                          cursor: 'pointer',
+                          textDecoration: 'underline',
+                          padding: 0,
+                        }}
+                      >
+                        Change Role ▾
+                      </button>
+                      {selectedCareers.length > 2 && (
+                        <button
+                          onClick={() => removeSlot(slotIdx)}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: 'var(--muted-foreground)',
+                            cursor: 'pointer',
+                            fontSize: 14,
+                            padding: 0,
+                          }}
+                          title="Remove column"
+                        >
+                          ✕
+                        </button>
+                      )}
                     </div>
+                    <div
+                      style={{
+                        fontFamily: 'var(--font-display)',
+                        fontSize: 20,
+                        fontWeight: 500,
+                        color: 'var(--foreground)',
+                        marginBottom: 4,
+                        cursor: 'pointer',
+                      }}
+                      onClick={() => {
+                        recordView(c.id);
+                        navigate(`/career/${c.id}`);
+                      }}
+                    >
+                      {c.title}
+                    </div>
+                    <p style={{ fontSize: 12, color: 'var(--muted-foreground)', margin: '0 0 8px', lineHeight: 1.4, fontWeight: 400 }}>
+                      {c.tagline}
+                    </p>
                     <button
-                      onClick={() => setPickerOpen(pickerOpen === i ? null : i)}
+                      onClick={() => {
+                        recordView(c.id);
+                        navigate(`/career/${c.id}`);
+                      }}
                       style={{
                         background: 'none',
                         border: 'none',
-                        fontFamily: 'var(--font-display)',
-                        fontSize: 20,
-                        fontWeight: 400,
-                        color: 'white',
+                        fontSize: 12,
+                        fontWeight: 600,
+                        color: 'var(--navy)',
                         cursor: 'pointer',
                         padding: 0,
-                        textAlign: 'left',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 6,
-                        letterSpacing: '-0.02em',
                       }}
                     >
-                      {career.title}
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5">
-                        <path d="M3 5l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      Explore Details →
                     </button>
-                  </div>
-                  {selected.length > 2 && (
+                  </th>
+                ))}
+                {selectedCareers.length < 3 && (
+                  <th style={{ padding: '20px', width: '15%', verticalAlign: 'middle', textAlign: 'center' }}>
                     <button
-                      onClick={() => removeSlot(i)}
-                      style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.4)', cursor: 'pointer', padding: 0 }}
+                      onClick={addSlot}
+                      style={{
+                        background: 'transparent',
+                        border: '1.5px dashed var(--border)',
+                        borderRadius: 'var(--radius)',
+                        padding: '12px 16px',
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: 'var(--navy)',
+                        cursor: 'pointer',
+                      }}
                     >
-                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
-                        <line x1="3" y1="3" x2="11" y2="11" /><line x1="11" y1="3" x2="3" y2="11" />
-                      </svg>
+                      + Add Career
                     </button>
-                  )}
-                </div>
+                  </th>
+                )}
+              </tr>
+            </thead>
+            <tbody>
+              {comparisonAttributes.map((attr, idx) => (
+                <tr key={attr.id} style={{ borderBottom: '1px solid var(--border)', background: idx % 2 === 0 ? 'white' : '#FCFCF9' }}>
+                  <td style={{ padding: '16px 20px', fontSize: 13, fontWeight: 700, color: 'var(--navy)', verticalAlign: 'top' }}>
+                    {attr.label}
+                  </td>
+                  {selectedCareers.map((c, slotIdx) => (
+                    <td key={slotIdx} style={{ padding: '16px 20px', verticalAlign: 'top' }}>
+                      {attr.render(c)}
+                    </td>
+                  ))}
+                  {selectedCareers.length < 3 && <td />}
+                </tr>
+              ))}
+              <tr>
+                <td style={{ padding: '20px', fontSize: 13, fontWeight: 700, color: 'var(--navy)' }}>
+                  Action
+                </td>
+                {selectedCareers.map((c, slotIdx) => (
+                  <td key={slotIdx} style={{ padding: '20px' }}>
+                    <button
+                      onClick={() => {
+                        createOrSetRoadmap(c.id);
+                        navigate('/my-path');
+                      }}
+                      style={{
+                        background: 'var(--primary)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: 'var(--radius)',
+                        padding: '10px 18px',
+                        fontSize: 13,
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        width: '100%',
+                      }}
+                    >
+                      Start My Path →
+                    </button>
+                  </td>
+                ))}
+                {selectedCareers.length < 3 && <td />}
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-                {/* Picker dropdown */}
-                {pickerOpen === i && (
-                  <div
+        {/* Career Picker Modal */}
+        {pickerSlot !== null && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(26,31,46,0.5)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 9999,
+              padding: 20,
+            }}
+            onClick={() => setPickerSlot(null)}
+          >
+            <div
+              style={{
+                background: 'var(--background)',
+                borderRadius: 'calc(var(--radius) * 1.5)',
+                maxWidth: 600,
+                width: '100%',
+                maxHeight: '75vh',
+                overflowY: 'auto',
+                padding: '28px',
+                border: '1px solid var(--border)',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 22, margin: 0 }}>
+                  Select Career to Compare
+                </h3>
+                <button
+                  onClick={() => setPickerSlot(null)}
+                  style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer', color: 'var(--muted-foreground)' }}
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {careers.map((career) => (
+                  <button
+                    key={career.id}
+                    onClick={() => handleSelectCareer(pickerSlot, career)}
                     style={{
-                      position: 'absolute',
-                      top: '100%',
-                      left: 0,
-                      right: 0,
-                      zIndex: 50,
                       background: 'var(--card)',
                       border: '1px solid var(--border)',
                       borderRadius: 'var(--radius)',
-                      boxShadow: '0 8px 32px rgba(26,31,46,0.12)',
-                      overflow: 'hidden',
+                      padding: '12px 16px',
+                      textAlign: 'left',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                     }}
                   >
-                    {careerOptions
-                      .filter((c) => !selected.find((s, si) => s.title === c.title && si !== i))
-                      .map((c) => (
-                        <button
-                          key={c.title}
-                          onClick={() => toggleCareer(i, c)}
-                          style={{
-                            width: '100%',
-                            padding: '12px 16px',
-                            border: 'none',
-                            background: 'none',
-                            textAlign: 'left',
-                            fontSize: 14,
-                            fontFamily: 'var(--font-body)',
-                            fontWeight: 500,
-                            color: 'var(--foreground)',
-                            cursor: 'pointer',
-                            borderBottom: '1px solid var(--border)',
-                            transition: 'background 0.15s ease',
-                          }}
-                          onMouseEnter={(e) => { (e.target as HTMLElement).style.background = 'var(--muted)'; }}
-                          onMouseLeave={(e) => { (e.target as HTMLElement).style.background = 'none'; }}
-                        >
-                          {c.title}
-                          <span style={{ fontSize: 12, color: 'var(--muted-foreground)', marginLeft: 8 }}>{c.field}</span>
-                        </button>
-                      ))}
-                  </div>
-                )}
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--foreground)' }}>{career.title}</div>
+                      <div style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>{career.category_name}</div>
+                    </div>
+                    <span style={{ fontSize: 12, color: 'var(--navy)', fontWeight: 600 }}>Select →</span>
+                  </button>
+                ))}
               </div>
             </div>
-          ))}
-
-          {selected.length < 3 && (
-            <button
-              onClick={addSlot}
-              style={{
-                background: 'var(--muted)',
-                border: '1px dashed var(--border)',
-                borderRadius: 'calc(var(--radius) * 2) calc(var(--radius) * 2) 0 0',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--muted-foreground)',
-                transition: 'all 0.2s ease',
-              }}
-              onMouseEnter={(e) => { (e.currentTarget).style.background = 'var(--secondary)'; }}
-              onMouseLeave={(e) => { (e.currentTarget).style.background = 'var(--muted)'; }}
-            >
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5">
-                <line x1="10" y1="4" x2="10" y2="16" strokeLinecap="round" />
-                <line x1="4" y1="10" x2="16" y2="10" strokeLinecap="round" />
-              </svg>
-            </button>
-          )}
-        </div>
-
-        {/* Metrics table */}
-        <div
-          style={{
-            border: '1px solid var(--border)',
-            borderTop: 'none',
-            borderRadius: `0 0 calc(var(--radius) * 2) calc(var(--radius) * 2)`,
-            overflow: 'hidden',
-          }}
-        >
-          {metrics.map((metric, mi) => (
-            <div
-              key={metric.key}
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `180px repeat(${selected.length}, 1fr)`,
-                borderBottom: mi < metrics.length - 1 ? '1px solid var(--border)' : 'none',
-                background: mi % 2 === 0 ? 'var(--card)' : 'var(--background)',
-              }}
-            >
-              <div
-                style={{
-                  padding: '16px 20px',
-                  fontSize: 13,
-                  fontWeight: 600,
-                  color: 'var(--muted-foreground)',
-                  borderRight: '1px solid var(--border)',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                {metric.label}
-              </div>
-              {selected.map((career, ci) => (
-                <div
-                  key={ci}
-                  style={{
-                    padding: '16px 20px',
-                    borderRight: ci < selected.length - 1 ? '1px solid var(--border)' : 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                  }}
-                >
-                  {renderValue(career, metric.key)}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
+          </div>
+        )}
       </div>
-
-      <style>{`
-        @media (max-width: 768px) {
-          div[style*="grid-template-columns: 180px"] {
-            grid-template-columns: 120px repeat(2, 1fr) !important;
-          }
-        }
-      `}</style>
+      <TOBEWidget />
     </AppShell>
   );
 }

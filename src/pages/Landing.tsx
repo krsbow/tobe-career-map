@@ -77,7 +77,7 @@ export default function Landing() {
               <circle cx="20" cy="34" r="6.5" fill="#7A9E8E" fillOpacity="0.4" />
               <circle cx="44" cy="34" r="9.5" stroke="#F9F8F5" strokeWidth="3" fill="none" />
               <circle cx="44" cy="34" r="6.5" fill="#7A9E8E" fillOpacity="0.4" />
-              <path d="M 29.5 33 C 33 28, 37 28, 40.5 33" stroke="#F9F8F5" strokeWidth="3" strokeLinecap="round" fill="none" />
+              <path d="M 29.5 33 C 30.7 30.5, 33.3 30.5, 34.5 33" stroke="#F9F8F5" strokeWidth="3" strokeLinecap="round" fill="none" />
               <path d="M 10.5 33 L 4 30" stroke="#F9F8F5" strokeWidth="3" strokeLinecap="round" fill="none" />
               <path d="M 53.5 33 L 60 30" stroke="#F9F8F5" strokeWidth="3" strokeLinecap="round" fill="none" />
             </svg>

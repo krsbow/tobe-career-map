@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useCareer } from '../context/CareerContext';
 
 const links = [
   { to: '/home', label: 'Home' },
@@ -11,6 +12,7 @@ const links = [
 
 export default function Nav() {
   const { user, logout } = useAuth();
+  const { savedCareerIds } = useCareer();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
@@ -18,6 +20,11 @@ export default function Nav() {
   const handleLogout = () => {
     logout();
     navigate('/');
+  };
+
+  const handleNavigateProfile = () => {
+    setProfileOpen(false);
+    navigate('/profile');
   };
 
   return (
@@ -46,7 +53,7 @@ export default function Nav() {
             <circle cx="20" cy="34" r="6.5" fill="#7A9E8E" fillOpacity="0.4" />
             <circle cx="44" cy="34" r="9.5" stroke="#F9F8F5" strokeWidth="3" fill="none" />
             <circle cx="44" cy="34" r="6.5" fill="#7A9E8E" fillOpacity="0.4" />
-            <path d="M 29.5 33 C 33 28, 37 28, 40.5 33" stroke="#F9F8F5" strokeWidth="3" strokeLinecap="round" fill="none" />
+            <path d="M 29.5 33 C 30.7 30.5, 33.3 30.5, 34.5 33" stroke="#F9F8F5" strokeWidth="3" strokeLinecap="round" fill="none" />
             <path d="M 10.5 33 L 4 30" stroke="#F9F8F5" strokeWidth="3" strokeLinecap="round" fill="none" />
             <path d="M 53.5 33 L 60 30" stroke="#F9F8F5" strokeWidth="3" strokeLinecap="round" fill="none" />
           </svg>
@@ -126,14 +133,96 @@ export default function Nav() {
                 border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-lg)',
                 boxShadow: '0 8px 32px rgba(26,31,46,0.10)',
-                minWidth: 180,
+                minWidth: 220,
                 overflow: 'hidden',
+                zIndex: 100,
               }}
             >
-              <div style={{ padding: '12px 16px', borderBottom: '1px solid var(--border)' }}>
-                <div style={{ fontSize: 13, fontWeight: 600 }}>{user?.name}</div>
-                <div style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>{user?.email}</div>
+              <div style={{ padding: '14px 16px', borderBottom: '1px solid var(--border)' }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: 'var(--foreground)' }}>{user?.name}</div>
+                <div style={{ fontSize: 12, color: 'var(--muted-foreground)', marginTop: 2 }}>{user?.email}</div>
               </div>
+
+              {/* Saved Careers Menu Option */}
+              <button
+                onClick={handleNavigateProfile}
+                style={{
+                  width: '100%',
+                  padding: '11px 16px',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: '1px solid var(--border)',
+                  textAlign: 'left',
+                  fontSize: 13.5,
+                  fontWeight: 500,
+                  cursor: 'pointer',
+                  color: 'var(--navy)',
+                  fontFamily: 'var(--font-body)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                }}
+              >
+                <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                  </svg>
+                  Saved Careers
+                </span>
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 700,
+                    background: 'var(--secondary)',
+                    color: 'var(--navy)',
+                    padding: '2px 7px',
+                    borderRadius: 10,
+                  }}
+                >
+                  {savedCareerIds.length}
+                </span>
+              </button>
+
+              {/* Profile Overview Option */}
+              <button
+                onClick={handleNavigateProfile}
+                style={{
+                  width: '100%',
+                  padding: '11px 16px',
+                  background: 'none',
+                  border: 'none',
+                  borderBottom: '1px solid var(--border)',
+                  textAlign: 'left',
+                  fontSize: 13.5,
+                  cursor: 'pointer',
+                  color: 'var(--foreground)',
+                  fontFamily: 'var(--font-body)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 8,
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                }}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                My Profile
+              </button>
+
               <button
                 onClick={handleLogout}
                 style={{
@@ -142,10 +231,17 @@ export default function Nav() {
                   background: 'none',
                   border: 'none',
                   textAlign: 'left',
-                  fontSize: 14,
+                  fontSize: 13.5,
                   cursor: 'pointer',
-                  color: 'var(--foreground)',
+                  color: 'var(--muted-foreground)',
                   fontFamily: 'var(--font-body)',
+                  transition: 'background 0.15s ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--secondary)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
                 }}
               >
                 Sign out
@@ -213,6 +309,39 @@ export default function Nav() {
               {link.label}
             </NavLink>
           ))}
+
+          {/* Mobile Profile & Saved Careers Link */}
+          <NavLink
+            to="/profile"
+            onClick={() => setMenuOpen(false)}
+            style={({ isActive }) => ({
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              textDecoration: 'none',
+              padding: '11px 0',
+              fontSize: 16,
+              fontWeight: 500,
+              fontFamily: 'var(--font-body)',
+              color: isActive ? 'var(--navy)' : 'var(--foreground)',
+              borderBottom: '1px solid var(--border)',
+            })}
+          >
+            <span>Saved Careers</span>
+            <span
+              style={{
+                fontSize: 12,
+                fontWeight: 700,
+                background: 'var(--secondary)',
+                color: 'var(--navy)',
+                padding: '2px 8px',
+                borderRadius: 10,
+              }}
+            >
+              {savedCareerIds.length}
+            </span>
+          </NavLink>
+
           <button
             onClick={handleLogout}
             style={{

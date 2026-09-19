@@ -15,8 +15,8 @@
   <!-- Right Lens Glare reflection -->
   <path d="M 40 29 A 6 6 0 0 1 47 29" fill="none" stroke="#FFFFFF" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0.7" />
   
-  <!-- Arched Nose Bridge -->
-  <path d="M 29.5 33 C 33 28, 37 28, 40.5 33" fill="none" stroke="#F9F8F5" stroke-width="3" stroke-linecap="round" />
+  <!-- Symmetrical Nose Bridge connecting inner edges -->
+  <path d="M 29.5 33 C 30.7 30.5, 33.3 30.5, 34.5 33" fill="none" stroke="#F9F8F5" stroke-width="3" stroke-linecap="round" />
 
   <!-- Left Temple frame arm -->
   <path d="M 10.5 33 L 4 30" fill="none" stroke="#F9F8F5" stroke-width="3" stroke-linecap="round" />
