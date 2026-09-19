@@ -633,7 +633,7 @@ export default function Discover() {
                 }}
               >
                 <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--muted-foreground)', textTransform: 'uppercase', letterSpacing: '0.06em', display: 'block', marginBottom: 12 }}>
-                  Your Dominant O*NET Interest Archetypes:
+                  Your Core Interest Themes:
                 </span>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
                   {assessmentResults.topTraits.map((t) => {

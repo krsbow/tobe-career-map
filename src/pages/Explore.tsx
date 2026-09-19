@@ -481,16 +481,9 @@ export default function Explore() {
                     <span style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--navy)', background: 'var(--secondary)', padding: '3px 8px', borderRadius: 4 }}>
                       {selectedCareer.category_name}
                     </span>
-                    {selectedCareer.psoc_code && (
-                      <span style={{ fontSize: 11, color: 'var(--muted-foreground)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: 4 }}>
-                        PSA PSOC: {selectedCareer.psoc_code}
-                      </span>
-                    )}
-                    {selectedCareer.soc_code && (
-                      <span style={{ fontSize: 11, color: 'var(--muted-foreground)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: 4 }}>
-                        O*NET: {selectedCareer.soc_code} (Job Zone {selectedCareer.job_zone || 4})
-                      </span>
-                    )}
+                    <span style={{ fontSize: 12, color: 'var(--muted-foreground)' }}>
+                      {selectedCareer.field}
+                    </span>
                   </div>
 
                   <h2
